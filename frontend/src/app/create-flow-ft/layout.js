@@ -1,16 +1,15 @@
-import "./globals.css";
+import "../globals.css";
 import { Inter } from "next/font/google";
-// import { ChakraProvider } from "@chakra-ui/react";
 import Header from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Your Flow Token",
-  description: "Create Your personal Tokens on Flow with Ease",
+  title: "Create Flow Token | FT",
+  description: "Create Your personal FT on Flow with Ease",
 };
 
-export default function RootLayout({ children }) {
+export default function FTPageLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>

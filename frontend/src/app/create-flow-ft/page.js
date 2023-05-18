@@ -4,9 +4,8 @@ import "../../../flow/config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
 import { Button, ButtonGroup } from "@chakra-ui/react";
-import Header from "@/components/header";
 
-export default function Home() {
+export default function FTPage() {
   const [user, setUser] = useState({ loggedIn: null });
   const [name, setName] = useState("");
   const [transactionStatus, setTransactionStatus] = useState(null);
@@ -83,33 +82,5 @@ export default function Home() {
     fcl.tx(transactionId).subscribe((res) => setTransactionStatus(res.status));
   };
 
-  return (
-    <div>
-      <h1 className="text-4xl font-bold pb-4">NFT PAGE App</h1>
-      {user.loggedIn ? (
-        <div> GO LOG IN </div>
-      ) : (
-        <div>
-          <div className="text-xl">Address: {user?.addr ?? "No Address"}</div>
-          <div className="text-xl">Profile Name: {name ?? "--"}</div>
-          <div>Transaction Status: {transactionStatus ?? "--"}</div>
-          <button className="rounded-lg border-2 font-bold" onClick={sendQuery}>
-            Send Query
-          </button>
-          <button
-            className="rounded-lg border-2 font-bold"
-            onClick={initAccount}
-          >
-            Init Account
-          </button>
-          <button
-            className="rounded-lg border-2 font-bold"
-            onClick={executeTransaction}
-          >
-            Execute Transaction
-          </button>
-        </div>
-      )}
-    </div>
-  );
+  return <div></div>;
 }
