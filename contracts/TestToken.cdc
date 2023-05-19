@@ -52,3 +52,4 @@ import FungibleToken from "./FungibleToken.cdc"
         self.account.save(<- create Minter(), to: /storage/Minter)
     }
  }
+ 
