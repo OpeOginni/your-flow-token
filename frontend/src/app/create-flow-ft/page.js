@@ -3,16 +3,22 @@
 import "../../../flow/config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Button, Link, Box } from "@chakra-ui/react";
+import CreateFtForm from "@/components/createFtForm";
 
 export default function FTPage() {
   const [user, setUser] = useState({ loggedIn: null });
   const [name, setName] = useState("");
   const [transactionStatus, setTransactionStatus] = useState(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  useEffect(() => {
-    fcl.currentUser.subscribe(setUser);
-  }, []);
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
 
   const sendQuery = async () => {
     const profile = await fcl.query({
@@ -82,5 +88,36 @@ export default function FTPage() {
     fcl.tx(transactionId).subscribe((res) => setTransactionStatus(res.status));
   };
 
-  return <div></div>;
+  useEffect(() => {
+    fcl.currentUser.subscribe(setUser);
+  }, []);
+  return (
+    <div>
+      <div className="flex flex-col justify-center items-center text-gWhite">
+        <h1 className="text-5xl font-bold pb-4 text-center">
+          <span className="text-8xl font-bold pb-4 text-center text-lightGreen">
+            Flow
+          </span>{" "}
+          Fungible Tokens
+        </h1>
+        <Box p="120px">
+          <div className=" flex flex-col justify-center items-center text-gWhite">
+            <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
+              Create Fungible Token
+            </h1>
+            <Button
+              height="48px"
+              width="150px"
+              size="lg"
+              className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+              onClick={handleOpenForm}
+            >
+              Create Now!
+            </Button>
+          </div>
+        </Box>
+      </div>
+      {isFormOpen && <CreateFtForm onClose={handleCloseForm} />}
+    </div>
+  );
 }

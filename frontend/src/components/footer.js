@@ -4,9 +4,9 @@ import { Button, ButtonGroup, Box, Text, Center } from "@chakra-ui/react";
 
 export default function Footer() {
   return (
-    <Box>
+    <Box className="absolute inset-x-0 bottom-0" color="white" p={4}>
       <Center>
-        <Text fontSize="xs">
+        <Text fontSize="xs" color="white">
           Proudly made in
           <span>
             <svg
