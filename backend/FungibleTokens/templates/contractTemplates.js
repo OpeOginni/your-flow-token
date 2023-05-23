@@ -1,19 +1,34 @@
 // Contract Template for users who do not want a Total Supply for their token
 
-const customTokenContractWithoutTotalSupply = (
+export const customTokenContractWithoutTotalSupply = (
   TokenDetails,
   fungibleTokenStandardAddress
 ) => {
-  `
+  return `
 import FungibleToken from ${fungibleTokenStandardAddress}
 
  access(all) contract ${TokenDetails.name}: FungibleToken {
-    /// Total supply of tokens in existence, initial 0, and increase when new tokens are minted
-      pub var totalSupply: UFix64
+    pub var totalSupply: UFix64 // If users what to have a totalSupply
 
+    /// TokensInitialized
+    ///
+    /// The event that is emitted when the contract is created
     pub event TokensInitialized(initialSupply: UFix64)
+
+    /// TokensWithdrawn
+    ///
+    /// The event that is emitted when tokens are withdrawn from a Vault
     pub event TokensWithdrawn(amount: UFix64, from: Address?)
+
+    /// TokensDeposited
+    ///
+    /// The event that is emitted when tokens are deposited to a Vault
     pub event TokensDeposited(amount: UFix64, to: Address?)
+
+    /// TokensMinted
+    ///
+    /// The event that is emitted when new tokens are minted
+    pub event TokensMinted(amount: UFix64)
 
     pub resource Vault: FungibleToken.Provider, FungibleToken.Receiver, FungibleToken.Balance {
         pub var balance: UFix64
@@ -69,12 +84,12 @@ import FungibleToken from ${fungibleTokenStandardAddress}
 
 // Contract Template for users who DO want a Total Supply for their token
 
-const customTokenContractWithTotalSupply = (
+export const customTokenContractWithTotalSupply = (
   tokenDetails,
   fungibleTokenStandardAddress,
   totalSupplyValue
 ) => {
-  `
+  return `
   import FungibleToken from ${fungibleTokenStandardAddress}
   
    access(all) contract ${tokenDetails.name}: FungibleToken {

@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-// import { ChakraProvider } from "@chakra-ui/react";
+import { Providers } from "./providers";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
@@ -15,9 +15,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        {children}
-        <Footer />
+        <Providers>
+          <Header />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

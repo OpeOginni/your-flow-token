@@ -10,12 +10,5 @@ export const metadata = {
 };
 
 export default function NFTPageLayout({ children }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Header />
-        {children}
-      </body>
-    </html>
-  );
+  return <section>{children}</section>;
 }

@@ -1,5 +1,6 @@
 import "../globals.css";
 import { Inter } from "next/font/google";
+import { Providers } from "../providers";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
@@ -11,13 +12,5 @@ export const metadata = {
 };
 
 export default function FTPageLayout({ children }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Header />
-        {children}
-        <Footer />
-      </body>
-    </html>
-  );
+  return <section>{children}</section>;
 }

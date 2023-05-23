@@ -1,10 +1,11 @@
 "use client";
 
 import "../../../flow/config";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import * as fcl from "@onflow/fcl";
 import { Button, Link, Box } from "@chakra-ui/react";
 import CreateFtForm from "@/components/createFtForm";
+import UserTokensList from "@/components/userTokens";
 
 export default function FTPage() {
   const [user, setUser] = useState({ loggedIn: null });
@@ -91,33 +92,42 @@ export default function FTPage() {
   useEffect(() => {
     fcl.currentUser.subscribe(setUser);
   }, []);
+  // fcl.currentUser.subscribe(setUser);
   return (
     <div>
-      <div className="flex flex-col justify-center items-center text-gWhite">
-        <h1 className="text-5xl font-bold pb-4 text-center">
-          <span className="text-8xl font-bold pb-4 text-center text-lightGreen">
-            Flow
-          </span>{" "}
-          Fungible Tokens
-        </h1>
-        <Box p="120px">
-          <div className=" flex flex-col justify-center items-center text-gWhite">
-            <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
-              Create Fungible Token
-            </h1>
-            <Button
-              height="48px"
-              width="150px"
-              size="lg"
-              className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
-              onClick={handleOpenForm}
-            >
-              Create Now!
-            </Button>
-          </div>
-        </Box>
+      {" "}
+      <div className={`main-content ${isFormOpen ? "blur" : ""}`}>
+        <div className="flex flex-col justify-center items-center text-gWhite">
+          <h1 className="text-5xl font-bold pb-4 text-center">
+            <span className="text-8xl font-bold pb-4 text-center text-lightGreen">
+              Flow
+            </span>{" "}
+            Fungible Tokens
+          </h1>
+          <Box p="120px">
+            <div className=" flex flex-col justify-center items-center text-gWhite">
+              <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
+                Create Fungible Token
+              </h1>
+              <Button
+                height="48px"
+                width="150px"
+                size="lg"
+                className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+                onClick={handleOpenForm}
+              >
+                Create Now!
+              </Button>
+            </div>
+          </Box>
+        </div>
       </div>
-      {isFormOpen && <CreateFtForm onClose={handleCloseForm} />}
+      <div>{isFormOpen && <CreateFtForm onClose={handleCloseForm} />}</div>
+      <div className={`${isFormOpen ? "blur" : ""}`}>
+        <Suspense fallback={<p>loading...</p>}>
+          <UserTokensList user={user} />
+        </Suspense>
+      </div>
     </div>
   );
 }

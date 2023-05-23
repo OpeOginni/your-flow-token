@@ -63,10 +63,10 @@ export function useTx(fns = [], opts = {}) {
   const onComplete = opts.onComplete || noop;
 
   async function trigger(args = []) {
-    onStart();
-    setStatus(PROCESSING);
-    setTxStatus(PROCESSING);
-    setDetails(() => EMPTY_DETAILS);
+    // onStart();
+    // setStatus(PROCESSING);
+    // setTxStatus(PROCESSING);
+    // setDetails(() => EMPTY_DETAILS);
 
     if (args.length) {
       fns.push((ix) => {
@@ -77,46 +77,48 @@ export function useTx(fns = [], opts = {}) {
       fns.push(fcl.args(args));
     }
     try {
-      setTxStatus(PENDING_AUTH);
+      // setTxStatus(PENDING_AUTH);
       var txId = await fcl.send(fns).then(fcl.decode);
-      onSent(txId);
+      return txId;
+      // onSent(txId);
 
-      setTxStatus(SUBMITTING_TO_CHAIN);
-      // eslint-disable-next-line
-      setDetails((details) => ({ ...details, txId }));
+      // setTxStatus(SUBMITTING_TO_CHAIN);
+      // // eslint-disable-next-line
+      // setDetails((details) => ({ ...details, txId }));
 
-      var unsub = fcl.tx(txId).subscribe((txStatus) => {
-        txStatus.label = statusKeys(txStatus);
-        setTxStatus(statusKeys(txStatus));
-        // eslint-disable-next-line
-        setDetails((details) => ({ ...details, txStatus }));
-        onUpdate(txStatus);
-      });
+      // var unsub = fcl.tx(txId).subscribe((txStatus) => {
+      //   txStatus.label = statusKeys(txStatus);
+      //   setTxStatus(statusKeys(txStatus));
+      //   // eslint-disable-next-line
+      //   setDetails((details) => ({ ...details, txStatus }));
+      //   onUpdate(txStatus);
+      // });
 
-      await fcl
-        .tx(txId)
-        .onceSealed()
-        .then(async (txStatus) => {
-          setStatus(SUCCESS);
-          onSuccess(txStatus);
-          unsub();
-        })
-        .catch((error) => {
-          unsub();
-          throw error;
-        });
+      // await fcl
+      //   .tx(txId)
+      //   .onceSealed()
+      //   .then(async (txStatus) => {
+      //     setStatus(SUCCESS);
+      //     onSuccess(txStatus);
+      //     unsub();
+      //   })
+      //   .catch((error) => {
+      //     unsub();
+      //     throw error;
+      //   });
     } catch (error) {
       onError(error);
       console.error("useTx", error, { fns });
-      setStatus(ERROR);
-      // eslint-disable-next-line
-      setDetails((details) => ({ ...details, error }));
-    } finally {
-      await sleep();
-      setStatus(IDLE);
-      setTxStatus(IDLE);
-      onComplete();
+      // setStatus(ERROR);
+      // // eslint-disable-next-line
+      // setDetails((details) => ({ ...details, error }));
     }
+    // finally {
+    //   await sleep();
+    //   setStatus(IDLE);
+    //   setTxStatus(IDLE);
+    //   onComplete();
+    // }
   }
 
   return [trigger, status, txStatus, details];
