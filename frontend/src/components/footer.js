@@ -4,7 +4,16 @@ import { Button, ButtonGroup, Box, Text, Center } from "@chakra-ui/react";
 
 export default function Footer() {
   return (
-    <Box className="absolute inset-x-0 bottom-0" color="white" p={4}>
+    <Box
+      // as="footer"
+      // position="fixed"
+      // bottom="0"
+      // left="0"
+      // right="0"
+      color="white"
+      p={4}
+      background="black"
+    >
       <Center>
         <Text fontSize="xs" color="white">
           Proudly made in

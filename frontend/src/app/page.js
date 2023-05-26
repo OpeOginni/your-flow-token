@@ -59,7 +59,7 @@ export default function Home() {
           </div>
         </SimpleGrid>
       ) : (
-        <div> Go on...Connet Your Wallet 😉</div>
+        <div> Go on...Connect Your Wallet 😉</div>
       )}
     </div>
   );

@@ -6,13 +6,13 @@ import * as fcl from "@onflow/fcl";
 import { Button, Link, Box } from "@chakra-ui/react";
 import CreateFtForm from "@/components/createFtForm";
 import UserTokensList from "@/components/userTokens";
+import LoadingUserTokensList from "@/components/loadingUserTokens";
+import { fetchAccountContracts } from "@/fetches/fetchAccountContracts";
 
-export default function FTPage() {
-  const [user, setUser] = useState({ loggedIn: null });
-  const [name, setName] = useState("");
-  const [transactionStatus, setTransactionStatus] = useState(null);
+export default async function FTPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
+  const [user, setUser] = useState(null);
   const handleOpenForm = () => {
     setIsFormOpen(true);
   };
@@ -89,10 +89,6 @@ export default function FTPage() {
     fcl.tx(transactionId).subscribe((res) => setTransactionStatus(res.status));
   };
 
-  useEffect(() => {
-    fcl.currentUser.subscribe(setUser);
-  }, []);
-  // fcl.currentUser.subscribe(setUser);
   return (
     <div>
       {" "}
@@ -124,9 +120,12 @@ export default function FTPage() {
       </div>
       <div>{isFormOpen && <CreateFtForm onClose={handleCloseForm} />}</div>
       <div className={`${isFormOpen ? "blur" : ""}`}>
-        <Suspense fallback={<p>loading...</p>}>
-          <UserTokensList user={user} />
-        </Suspense>
+        <Box background="black" className="flex flex-col  text-gWhite">
+          <h1 className="text-3xl font-bold pb-4 text-center">Your Tokens</h1>
+          <Suspense fallback={<LoadingUserTokensList />}>
+            <UserTokensList />
+          </Suspense>
+        </Box>
       </div>
     </div>
   );
