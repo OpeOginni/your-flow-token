@@ -1,6 +1,5 @@
 "use client";
 
-import * as contractTemplates from "../../../../../backend/FungibleTokens/templates/contractTemplates";
 import "../../../../flow/config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
@@ -24,14 +23,16 @@ import {
 } from "@chakra-ui/react";
 import { useTx, IDLE } from "../../../hooks/use-tx.hook";
 import Link from "next/link";
+import { ftContractTemplateFactory } from "../../../../../backend/FungibleTokens/contractFactory/fungibleTokenContractFactory";
 
 export default function CreateFtForm({ onClose }) {
   const toast = useToast();
+  const networkType = "TESTNET";
 
   const [user, setUser] = useState({ loggedIn: null });
-  const [isTotalSupplyChecked, setIsTotalSupplyChecked] = useState(true);
+  const [IsInitialMintChecked, setIsInitialMintChecked] = useState(true);
   const [tokenName, setTokenName] = useState("");
-  const [totalSupply, setTotalSupply] = useState(0);
+  const [initialMint, setInitialMint] = useState(0);
   const [transactionPending, setTransactionPending] = useState(false);
 
   const createToast = (title, description, status, duration) => {
@@ -72,11 +73,13 @@ export default function CreateFtForm({ onClose }) {
       });
     }
 
-    const tokenContract =
-      contractTemplates.customTokenContractWithoutTotalSupply(
-        { name: tokenName },
-        "0x9a0766d93b6608b7"
-      );
+    const tokenContract = ftContractTemplateFactory(
+      tokenName,
+      initialMint,
+      networkType
+    );
+
+    console.log(tokenContract);
 
     try {
       setTransactionPending(true);
@@ -88,6 +91,15 @@ export default function CreateFtForm({ onClose }) {
 
       fcl.tx(txId).subscribe(async (res) => {
         console.log(res);
+        if (res.errorMessage) {
+          setTransactionPending(false);
+          return createToast(
+            "TX Status",
+            "Error in Creating Token",
+            "error",
+            9000
+          );
+        }
         if (res.status === 4) {
           console.log("EXECUTED");
           setTransactionPending(false);
@@ -97,11 +109,14 @@ export default function CreateFtForm({ onClose }) {
             "success",
             9000
           );
-          // onClose();
-          window.open(
-            `https://testnet.flowscan.org/transaction/${txId}/script`,
-            "_blank"
-          );
+
+          // SHows Transaction Page in 4 seconds
+          setTimeout(function () {
+            window.open(
+              `https://testnet.flowscan.org/transaction/${txId}/script`,
+              "_blank"
+            );
+          }, 4000);
         }
       });
     } catch (e) {
@@ -110,11 +125,6 @@ export default function CreateFtForm({ onClose }) {
 
       return createToast("Error", "Please Try Again", "error", 3000);
     }
-  };
-
-  const handleCloseClick = () => {
-    // Close the form
-    onClose();
   };
 
   useEffect(() => {
@@ -148,14 +158,19 @@ export default function CreateFtForm({ onClose }) {
                 size="lg"
                 colorScheme="green"
                 spacing="1rem"
-                onChange={(e) => setIsTotalSupplyChecked(e.target.checked)}
+                onChange={(e) => setIsInitialMintChecked(e.target.checked)}
               >
-                Total Cap Supply
+                Initial Mint
               </Checkbox>
               <FormControl>
-                <FormLabel>Total Supply</FormLabel>
-                {!isTotalSupplyChecked ? (
-                  <NumberInput focusBorderColor="lime" value={0} isDisabled>
+                <FormLabel>Amount Minted To You</FormLabel>
+                {!IsInitialMintChecked ? (
+                  <NumberInput
+                    precision={2}
+                    focusBorderColor="lime"
+                    value={0}
+                    isDisabled
+                  >
                     <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
@@ -164,10 +179,11 @@ export default function CreateFtForm({ onClose }) {
                   </NumberInput>
                 ) : (
                   <NumberInput
+                    precision={2}
                     focusBorderColor="lime"
                     defaultValue={1}
                     min={1}
-                    onChange={(event) => setTotalSupply(event)}
+                    onChange={(event) => setInitialMint(event)}
                   >
                     <NumberInputField />
                     <NumberInputStepper>

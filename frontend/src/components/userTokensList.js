@@ -1,6 +1,15 @@
 import "../../flow/config";
 import { useEffect, useState } from "react";
-import { Badge, Grid, Box, Text, useToast, GridItem } from "@chakra-ui/react";
+import {
+  Badge,
+  Grid,
+  Box,
+  Text,
+  useToast,
+  GridItem,
+  Center,
+  Spinner,
+} from "@chakra-ui/react";
 
 import * as fcl from "@onflow/fcl";
 import * as scriptTemplates from "../../../backend/FungibleTokens/templates/scriptTemplates";
@@ -8,7 +17,9 @@ import Link from "next/link";
 
 const UserTokensList = ({ user }) => {
   const toast = useToast();
-  const [combinedData, setCombinedData] = useState([]);
+  const [combinedData, setCombinedData] = useState(null);
+  const [_combinedData, _setCombinedData] = useState(null);
+
   useEffect(() => {
     const fetchAccountContracts = async () => {
       const wallet = await user;
@@ -54,7 +65,33 @@ const UserTokensList = ({ user }) => {
     <Box background="black" className="flex flex-col  text-gWhite">
       <h1 className="text-3xl font-bold pb-4 text-center">Your Tokens</h1>
       <div className="flex flex-col">
-        {combinedData.length > 0 ? (
+        {combinedData == null ? (
+          <Grid padding="5" templateColumns="repeat(8, 1fr)" gap={6}>
+            <GridItem colSpan={2}>
+              <Center>
+                <Spinner />
+              </Center>{" "}
+            </GridItem>
+
+            <GridItem colSpan={2}>
+              <Center>
+                <Spinner />
+              </Center>
+            </GridItem>
+
+            <GridItem colSpan={2}>
+              <Center>
+                <Spinner />
+              </Center>
+            </GridItem>
+
+            <GridItem colSpan={2}>
+              <Center>
+                <Spinner />
+              </Center>
+            </GridItem>
+          </Grid>
+        ) : combinedData.length > 0 ? (
           combinedData.map((contract) => (
             <Grid
               padding="5"
@@ -94,7 +131,11 @@ const UserTokensList = ({ user }) => {
             </Grid>
           ))
         ) : (
-          <p>Loading...</p>
+          <Center>
+            <Text className="text-bold text-lightGreen">
+              You Have No Tokens
+            </Text>
+          </Center>
         )}
       </div>
     </Box>

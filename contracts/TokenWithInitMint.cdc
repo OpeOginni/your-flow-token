@@ -1,7 +1,7 @@
 // import FungibleToken from 0x9a0766d93b6608b7
 import FungibleToken from "./FungibleToken.cdc"
 
- access(all) contract MyFlowToken: FungibleToken {
+ access(all) contract MyFlowToken2: FungibleToken {
     pub var totalSupply: UFix64 
 
     /// TokensInitialized
@@ -24,7 +24,8 @@ import FungibleToken from "./FungibleToken.cdc"
     /// The event that is emitted when new tokens are minted
     pub event TokensMinted(amount: UFix64)
 
-
+    pub let TokenVaultStoragePath: StoragePath
+	pub let TokenVaultPublicPath: PublicPath
     pub let TokenMinterStoragePath: StoragePath
 
     pub resource Vault: FungibleToken.Provider, FungibleToken.Receiver, FungibleToken.Balance {
@@ -41,7 +42,7 @@ import FungibleToken from "./FungibleToken.cdc"
         }
 
         pub fun deposit(from: @FungibleToken.Vault) {
-            let vault <- from as! @MyFlowToken.Vault
+            let vault <- from as! @MyFlowToken2.Vault
             self.balance = self.balance + vault.balance 
             emit TokensDeposited(amount: vault.balance, to: self.owner?.address)
             vault.balance = 0.0
@@ -49,7 +50,7 @@ import FungibleToken from "./FungibleToken.cdc"
         }
 
         destroy() {
-            MyFlowToken.totalSupply = MyFlowToken.totalSupply - self.balance
+            MyFlowToken2.totalSupply = MyFlowToken2.totalSupply - self.balance
         }
     }
 
@@ -57,20 +58,34 @@ import FungibleToken from "./FungibleToken.cdc"
         return <- create Vault(balance: 0.0)
     }
 
+    access(contract) fun initialMint(initialMintValue: UFix64): @FungibleToken.Vault {
+        return <- create Vault(balance: initialMintValue)
+    }
+
     pub resource Minter {
-        pub fun mintToken(amount: UFix64): @FungibleToken.Vault {
-            MyFlowToken.totalSupply = MyFlowToken.totalSupply + amount
+        pub fun mintTokens(amount: UFix64): @FungibleToken.Vault {
+        pre {
+                amount > 0.0: "Amount minted must be greater than zero"
+            }
+            MyFlowToken2.totalSupply = MyFlowToken2.totalSupply + amount
             return <- create Vault(balance:amount)
         }
         
     }
 
     init() {
-        self.totalSupply = 0.0
+        self.totalSupply = 500.00
+        self.TokenVaultStoragePath = /storage/MyFlowToken2Vault
+		self.TokenVaultPublicPath = /public/MyFlowToken2Vault
+        self.TokenMinterStoragePath = /storage/MyFlowToken2Minter
 
-        self.TokenMinterStoragePath = /storage/MyFlowTokenMinter
+        self.account.save(<- create Minter(), to: MyFlowToken2.TokenMinterStoragePath)
 
-        self.account.save(<- create Minter(), to: MyFlowToken.TokenMinterStoragePath)
+       //
+       // Create an Empty Vault for the Minter
+       //
+        self.account.save(<- MyFlowToken2.initialMint(initialMintValue: self.totalSupply), to: MyFlowToken2.TokenVaultStoragePath)
+        self.account.link<&MyFlowToken2.Vault{FungibleToken.Balance, FungibleToken.Receiver}>(MyFlowToken2.TokenVaultPublicPath, target: MyFlowToken2.TokenVaultStoragePath)
     }
  }
  
