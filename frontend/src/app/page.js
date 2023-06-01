@@ -1,20 +1,29 @@
 "use client";
 
-import "../../flow/config";
+import "../../flow/config.js";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
-import { SimpleGrid, Button } from "@chakra-ui/react";
-import Header from "@/components/header";
-import Link from "next/link";
+import { SimpleGrid, Button, useToast } from "@chakra-ui/react";
+import Link from "next/link.js";
 
 export default function Home() {
   const [user, setUser] = useState({ loggedIn: null });
-  const [name, setName] = useState("");
-  const [transactionStatus, setTransactionStatus] = useState(null);
 
   useEffect(() => {
     fcl.currentUser.subscribe(setUser);
   }, []);
+
+  const toast = useToast();
+
+  const comingSoonToast = () => {
+    toast({
+      title: "NFT Creation Coming Soon",
+      description: "Keep Your Eyes Peeled.",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
 
   return (
     <div className="flex flex-col justify-center items-center text-gWhite">
@@ -31,14 +40,14 @@ export default function Home() {
             <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
               Create Fungible Token
             </h1>
-            <Link href="/create-flow-ft">
+            <Link href="/createFlowFT">
               <Button
                 height="48px"
                 width="150px"
                 size="lg"
                 className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
               >
-                Create Now!
+                Fungible Tokens
               </Button>
             </Link>
           </div>
@@ -46,16 +55,15 @@ export default function Home() {
             <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
               Create Non-Fungible Token (NFT)
             </h1>
-            <Link href="/create-flow-nft">
-              <Button
-                height="48px"
-                width="150px"
-                size="lg"
-                className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
-              >
-                Create Now!
-              </Button>
-            </Link>
+            <Button
+              height="48px"
+              width="150px"
+              size="lg"
+              className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+              onClick={comingSoonToast}
+            >
+              Coming Soon!
+            </Button>
           </div>
         </SimpleGrid>
       ) : (

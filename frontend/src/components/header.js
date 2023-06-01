@@ -1,6 +1,6 @@
 "use client";
 
-import "../../flow/config";
+import "../../flow/config.js";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
 import { Button, ButtonGroup, Box, Text } from "@chakra-ui/react";
