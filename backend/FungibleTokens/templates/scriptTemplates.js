@@ -1,3 +1,15 @@
+/* Here I keep All Important Scripts needed to Interact with a Fungible Token Contract
+
+  They are exported in the form of functions that returns the script as some details in the cadence scripts will be dynamic 
+
+  The Scripts Here at the moment are:
+
+  - Get Account Token Balance Script
+  - Get Token Total Supply Script
+  - Get Account Contracts Script (Made Personally and Tested using the Flow Playground Site)
+*/
+
+/* This Script Gets the amount of tokens in a Flow Account */
 export const getTokenBalanceOfAccount = (
   TokenDetails,
   FungibleTokenStandardAddress
@@ -15,6 +27,7 @@ export const getTokenBalanceOfAccount = (
   `;
 };
 
+/* This Script Gets the Total Supply of a Token on flow */
 export const getTokenTotalSupply = (TokenDetails) => {
   return `
   import ${TokenDetails.name} from ${TokenDetails.contractAddress}
@@ -25,6 +38,11 @@ export const getTokenTotalSupply = (TokenDetails) => {
   `;
 };
 
+/* This script is a really nice one,
+  I found it while playing around in the flow playground.
+  It fetches all contracts from a particular Flow Account,
+  I used it to add a feature to my app that let users see their deployed contracts and access them straight from the app.
+*/
 export const getAccountContracts = () => {
   return `
   pub struct ContractDetails {

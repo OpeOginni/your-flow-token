@@ -1,5 +1,5 @@
-import MyFlowToken from "./TestToken.cdc"
-import FungibleToken from "./FungibleToken.cdc"
+import MyFlowToken from "../contracts/TestToken.cdc"
+import FungibleToken from "../contracts/FungibleToken.cdc"
 
 
 transaction {

@@ -1,4 +1,9 @@
-// Contract Template for users who do not want a Total Supply for their token
+/* Here I keep All Important Cadence Contract Templates needed to Deploy a Fungible Token on Flow
+  The Templates Here at the moment are:
+
+  - A Flow Token Contract Template for users who do not want an InitialMint of their tokens
+  - A Flow Token Contract Template for users who want an InitialMint of their tokens
+*/
 
 export const customTokenContractWithoutInitialMint = (
   tokenName,
@@ -83,7 +88,7 @@ export const customTokenContractWithoutInitialMint = (
     `;
 };
 
-// Contract Template for users who DO want a Total Supply for their token
+/* Contract Template for users who DO want a an InitialMint of their token, (the token will be deposited into their account) */
 
 export const customTokenContractWithInitialMint = (
   tokenName,

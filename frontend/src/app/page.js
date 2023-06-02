@@ -1,7 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import * as fcl from "@onflow/fcl";
 import { SimpleGrid, Button, useToast } from "@chakra-ui/react";
 import Link from "next/link.js";
 import WelcomeHeader from "@/components/welcomeHeader";

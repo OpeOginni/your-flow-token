@@ -20,7 +20,7 @@ import {
   Center,
   useToast,
 } from "@chakra-ui/react";
-import { useTx, IDLE } from "../../../../hooks/use-tx.hook";
+import { useTx } from "../../../../hooks/use-tx.hook";
 import Link from "next/link";
 import { ftContractTemplateFactory } from "../../../../../../backend/FungibleTokens/contractFactory/fungibleTokenContractFactory";
 import { usePathname } from "next/navigation";
