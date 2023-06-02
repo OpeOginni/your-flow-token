@@ -21,6 +21,17 @@ To run this project locally, follow these steps:
 3. Install the dependencies by running the command `npm install`.
 4. Start the development server with `npm run dev`.
 
+## How To Create a Fungible Token on the Flow Blockchain
+
+1. Open your web browser and navigate to the URL where the project is running.
+2. Choose which network you would like to deploy your token on. (Either Mainnet or Testnet).
+3. Connect your wallet by clicking the Login button and following the authentication process.
+4. Choose whoch type of Token you would like to create. (NFT creation is not available yet)
+5. Provide the necessary details for token creation, such as name, and decide if you would like an Initial Mint.
+6. Click the "Create Token" button to initiate the token creation process.
+7. Wait for the transaction to be confirmed on the Flow Blockchain.
+8. Once the token is successfully created, you will receive a confirmation message.
+
 ## Technologies Used
 
 This project leverages the following technologies and languages:
@@ -43,18 +54,7 @@ This project leverages the following technologies and languages:
   </a>
 </div>
 
-## Usage
-
-1. Open your web browser and navigate to the URL where the project is running.
-2. Choose which network you would like to deploy your token on. (Either Mainnet or Testnet).
-3. Connect your wallet by clicking the Login button and following the authentication process.
-4. Choose whoch type of Token you would like to create. (NFT creation is not available yet)
-5. Provide the necessary details for token creation, such as name, symbol, and supply.
-6. Click the "Create Token" button to initiate the token creation process.
-7. Wait for the transaction to be confirmed on the Flow Blockchain.
-8. Once the token is successfully created, you will receive a confirmation message.
-
-## Future Considerations
+## Future Considerations / WIP
 
 At the moment users can only create Fungible Tokens, I would like to add the functionality to allow users create Non-Fungible Tokens too.
 
