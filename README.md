@@ -25,27 +25,22 @@ To run this project locally, follow these steps:
 
 This project leverages the following technologies and languages:
 
-<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px;">
-  <div>
-    <img src="./images/nextjs.svg" alt="NextJS" width="30px" height="30px">
-    <p style="text-align: center;">NextJS</p>
-  </div>
-  <div>
-    <img src="./images/chakraUI.svg" alt="ChakraUI" width="30px" height="30px">
-    <p style="text-align: center;">ChakraUI</p>
-  </div>
-  <div>
-    <img src="./images/js.svg" alt="JavaScript" width="30px" height="30px">
-    <p style="text-align: center;">JavaScript</p>
-  </div>
-  <div>
-    <img src="./images/tailwindcss.svg" alt="TailwindCSS" width="30px" height="30px">
-    <p style="text-align: center;">TailwindCSS</p>
-  </div>
-  <div>
-    <img src="https://cryptologos.cc/logos/flow-flow-logo.svg?v=025" alt="Cadence" width="30px" height="30px">
-    <p style="text-align: center;">Cadence</p>
-  </div>
+<div style="display: flex; justify-content: center; align-items: center;">
+  <a href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">
+    <img src="./images/nextjs.svg" alt="NextJS" width="50px" style="margin-right: 30px;">
+  </a>
+  <a href="https://chakra-ui.com/" target="_blank" rel="noopener noreferrer">
+    <img src="./images/chakraUI.svg" alt="ChakraUI" width="50px" style="margin-right: 30px;">
+  </a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">
+    <img src="./images/js.svg" alt="JavaScript" width="50px" style="margin-right: 30px;">
+  </a>
+  <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">
+    <img src="./images/tailwindcss.svg" alt="TailwindCSS" width="50px" style="margin-right: 30px;">
+  </a>
+  <a href="https://flow.com/" target="_blank" rel="noopener noreferrer">
+    <img src="https://cryptologos.cc/logos/flow-flow-logo.svg?v=025" alt="Cadence" width="50px">
+  </a>
 </div>
 
 ## Usage
