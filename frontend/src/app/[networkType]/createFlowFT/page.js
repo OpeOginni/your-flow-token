@@ -1,13 +1,22 @@
 "use client";
 
-import "../../../flow/testnet.config";
+import "../../../../flow/testnet.config";
 import { Suspense } from "react";
 import * as fcl from "@onflow/fcl";
 import { Button, Box, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import UserTokensList from "../../components/userTokensList";
+import UserTokensList from "../../../components/userTokensList";
+
+import { usePathname } from "next/navigation";
+import { flowConfig } from "@/utils/flowConfig.util";
 
 export default function FTPage() {
+  // Get the PathName to know which Network the User is On
+  const pathName = usePathname();
+  const networkType = pathName.split("/")[1].toLocaleUpperCase();
+
+  // Use the Flow Config settings of the specific network the user is on
+  flowConfig(networkType);
   const getUser = () => {
     return new Promise((resolve, reject) => {
       fcl.currentUser().subscribe(resolve, reject);
@@ -16,8 +25,8 @@ export default function FTPage() {
 
   return (
     <div>
-      <div className={`main-content`}>
-        <div className="flex flex-col justify-center items-center text-gWhite ">
+      <div className={`content`}>
+        <div className="flex flex-col justify-center items-center text-gWhite">
           <h1 className="text-5xl font-bold pb-4 text-center">
             <span className="text-8xl font-bold pb-4 text-center text-lightGreen">
               Flow

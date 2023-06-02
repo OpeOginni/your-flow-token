@@ -1,4 +1,4 @@
-import "../../flow/config";
+import "../../flow/testnet.config";
 import { useEffect, useState } from "react";
 import {
   Badge,

@@ -1,12 +1,20 @@
 "use client";
 
-import "../../flow/config.js";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
 import { Button, ButtonGroup, Box, Text } from "@chakra-ui/react";
+import { usePathname } from "next/navigation";
+import { flowConfig } from "@/utils/flowConfig.util.js";
 
 export default function Header() {
   const [user, setUser] = useState({ loggedIn: null });
+
+  // Get the PathName to know which Network the User is On
+  const pathName = usePathname();
+  const networkType = pathName.split("/")[1].toLocaleUpperCase();
+
+  // Use the Flow Config settings of the specific network the user is on
+  flowConfig(networkType);
 
   useEffect(() => {
     fcl.currentUser.subscribe(setUser);

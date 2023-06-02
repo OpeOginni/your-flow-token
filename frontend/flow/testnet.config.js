@@ -6,6 +6,5 @@ config({
   "discovery.authn.endpoint":
     "https://fcl-discovery.onflow.org/api/testnet/authn",
   "app.detail.icon": "https://placekitten.com/g/200/200",
-  "app.detail.title": "My Flow Meme Token",
-  "0xProfile": "0xba1132bc08f82fe2",
+  "app.detail.title": "My Flow Token",
 });
