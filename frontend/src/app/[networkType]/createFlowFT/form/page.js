@@ -27,12 +27,21 @@ import { usePathname } from "next/navigation";
 import { flowConfig } from "@/utils/flowConfig.util";
 
 export default function CreateFtForm({ onClose }) {
+  const toast = useToast();
   // Get the PathName to know which Network the User is On
   const pathName = usePathname();
   const networkType = pathName.split("/")[1].toLocaleUpperCase();
 
   // Use the Flow Config settings of the specific network the user is on
   flowConfig(networkType);
+
+  const flowScanExplorer = (_networkType, _txId) => {
+    if (_networkType === "MAINNET") {
+      return `https://flowscan.org/transaction/${_txId}`;
+    } else if (_networkType === "TESTNET") {
+      return `https://testnet.flowscan.org/transaction/${_txId}`;
+    }
+  };
 
   const getUser = () => {
     return new Promise((resolve, reject) => {
@@ -123,10 +132,7 @@ export default function CreateFtForm({ onClose }) {
 
           // SHows Transaction Page in 4 seconds
           setTimeout(function () {
-            window.open(
-              `https://testnet.flowscan.org/transaction/${txId}/script`,
-              "_blank"
-            );
+            window.open(flowScanExplorer(networkType, txId), "_blank");
           }, 4000);
         }
       });
@@ -207,6 +213,16 @@ export default function CreateFtForm({ onClose }) {
             </Box>
             <div>
               <ButtonGroup spacing="80" paddingTop="15px">
+                <Link href={`/${networkType.toLocaleLowerCase()}/createFlowFT`}>
+                  <Button
+                    height="48px"
+                    width="150px"
+                    size="lg"
+                    className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+                  >
+                    Close
+                  </Button>
+                </Link>
                 <Button
                   height="48px"
                   width="150px"
@@ -218,16 +234,6 @@ export default function CreateFtForm({ onClose }) {
                 >
                   Create Token
                 </Button>
-                <Link href="/createFlowFT">
-                  <Button
-                    height="48px"
-                    width="150px"
-                    size="lg"
-                    className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
-                  >
-                    Close
-                  </Button>
-                </Link>
               </ButtonGroup>
             </div>
           </div>

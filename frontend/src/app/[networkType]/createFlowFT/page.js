@@ -3,7 +3,7 @@
 import "../../../../flow/testnet.config";
 import { Suspense } from "react";
 import * as fcl from "@onflow/fcl";
-import { Button, Box, Text } from "@chakra-ui/react";
+import { Button, Box, Badge, Center } from "@chakra-ui/react";
 import Link from "next/link";
 import UserTokensList from "../../../components/userTokensList";
 
@@ -33,12 +33,23 @@ export default function FTPage() {
             </span>{" "}
             Fungible Tokens
           </h1>
+          <Badge
+            borderRadius="full"
+            px="2"
+            variant="outline"
+            colorScheme="green"
+            className="text-3xl font-bold text-center text-lightGreen"
+          >
+            <Center>{networkType}</Center>
+          </Badge>
           <Box p="120px">
             <div className=" flex flex-col justify-center items-center text-gWhite">
               <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
                 Create Fungible Token
               </h1>
-              <Link href="/createFlowFT/form">
+              <Link
+                href={`/${networkType.toLocaleLowerCase()}/createFlowFT/form`}
+              >
                 <Button
                   height="48px"
                   width="150px"
@@ -49,14 +60,14 @@ export default function FTPage() {
                 </Button>
               </Link>
               <Box paddingTop="15px">
-                <Link href="/">
+                <Link href={`/${networkType.toLocaleLowerCase()}`}>
                   <Button
                     height="40px"
                     width="110px"
                     size="lg"
                     className="rounded-xl text-sm text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
                   >
-                    Back To Home
+                    Go Back
                   </Button>
                 </Link>
               </Box>

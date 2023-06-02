@@ -33,9 +33,12 @@ const UserTokensList = ({ user }) => {
         const newData = accountContractsArray1
           .map((firstObj, index) => {
             const { contractName, contractAddress, contractType } = firstObj;
-
+            let contractAddressWithoutOx;
+            if (contractAddress) {
+              contractAddressWithoutOx = contractAddress.replace("0x", "");
+            }
             return {
-              id: `A.${contractAddress}.${contractName}`,
+              id: `A.${contractAddressWithoutOx}.${contractName}`,
               _id: index,
               type: contractType.kind,
               name: contractName,

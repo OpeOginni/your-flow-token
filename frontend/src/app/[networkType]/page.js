@@ -66,7 +66,7 @@ export default function NetworkTypeHomePage() {
             <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
               Create Fungible Token
             </h1>
-            <Link href="/createFlowFT">
+            <Link href={`/${networkType.toLocaleLowerCase()}/createFlowFT`}>
               <Button
                 height="48px"
                 width="150px"
