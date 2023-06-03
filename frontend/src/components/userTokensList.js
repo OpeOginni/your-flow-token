@@ -111,7 +111,9 @@ const UserTokensList = ({ user }) => {
               gap={6}
             >
               <GridItem colSpan={2}>
-                <Text colSpan={2}>{contract.name}</Text>
+                <Text className="text-lg" as="b" colSpan={2}>
+                  {contract.name}
+                </Text>
               </GridItem>
 
               <GridItem colSpan={2}>
