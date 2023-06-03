@@ -1,6 +1,8 @@
 # Chainlink 2023 Hackathon Project
 
-## Introduction to Your Flow Token
+## Introduction to `Your Flow Token`
+
+<img src="./images/yourflow-logo2.svg" alt="YourFlowToken" width="50px" style="margin-right: 30px;">
 
 This hackathon project is a NextJS website that allows users to create tokens on the Flow Blockchain with just a few clicks. The project utilizes NextJS, ChakraUI, the @onflow/fcl package, JavaScript, and the Cadence. By connecting their wallet and providing the necessary details, users can easily generate tokens on the Flow Blockchain.
 
