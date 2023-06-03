@@ -33,6 +33,12 @@ body {
   flex: 1;
 }
 
+.octicon {
+  display: inline-block;
+  overflow: visible !important;
+  fill: currentColor;
+}
+
 .footer {
   flex-shrink: 0;
 }
