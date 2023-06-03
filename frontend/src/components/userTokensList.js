@@ -1,4 +1,3 @@
-import "../../flow/testnet.config";
 import { useEffect, useState } from "react";
 import {
   Badge,
@@ -14,8 +13,17 @@ import {
 import * as fcl from "@onflow/fcl";
 import * as scriptTemplates from "../../../backend/FungibleTokens/templates/scriptTemplates";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { flowConfig } from "../utils/flowConfig.util.js";
 
 const UserTokensList = ({ user }) => {
+  // Get the PathName to know which Network the User is On
+  const pathName = usePathname();
+  const networkType = pathName.split("/")[1].toLocaleUpperCase();
+
+  // Use the Flow Config settings of the specific network the user is on
+  flowConfig(networkType);
+
   const toast = useToast();
   const [combinedData, setCombinedData] = useState(null);
   const [_combinedData, _setCombinedData] = useState(null);

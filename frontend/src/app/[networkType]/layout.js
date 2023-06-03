@@ -1,6 +1,6 @@
 import "../globals.css";
 import { Inter } from "next/font/google";
-import Header from "@/components/header";
+import Header from "../../components/header";
 
 export const metadata = {
   title: "Your Flow Token",

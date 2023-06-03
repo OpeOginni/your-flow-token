@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link.js";
 import { usePathname } from "next/navigation";
-import { flowConfig } from "@/utils/flowConfig.util";
+import { flowConfig } from "../../utils/flowConfig.util";
 
 export default function NetworkTypeHomePage() {
   const [user, setUser] = useState({ loggedIn: null });

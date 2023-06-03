@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, ButtonGroup, Box, Text, Center } from "@chakra-ui/react";
+import { Box, Text, Center } from "@chakra-ui/react";
 
 export default function Footer() {
   return (

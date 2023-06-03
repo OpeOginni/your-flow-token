@@ -8,7 +8,7 @@ import Link from "next/link";
 import UserTokensList from "../../../components/userTokensList";
 
 import { usePathname } from "next/navigation";
-import { flowConfig } from "@/utils/flowConfig.util";
+import { flowConfig } from "../../../utils/flowConfig.util";
 
 export default function FTPage() {
   // Get the PathName to know which Network the User is On

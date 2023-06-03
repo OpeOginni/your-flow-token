@@ -2,7 +2,7 @@
 
 import { SimpleGrid, Button, useToast } from "@chakra-ui/react";
 import Link from "next/link.js";
-import WelcomeHeader from "@/components/welcomeHeader";
+import WelcomeHeader from "../components/welcomeHeader";
 
 export default function Home() {
   return (

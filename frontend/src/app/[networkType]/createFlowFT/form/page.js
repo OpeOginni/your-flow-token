@@ -24,7 +24,7 @@ import { useTx } from "../../../../hooks/use-tx.hook";
 import Link from "next/link";
 import { ftContractTemplateFactory } from "../../../../../../backend/FungibleTokens/contractFactory/fungibleTokenContractFactory";
 import { usePathname } from "next/navigation";
-import { flowConfig } from "@/utils/flowConfig.util";
+import { flowConfig } from "../../../../utils/flowConfig.util";
 
 export default function CreateFtForm({ onClose }) {
   const toast = useToast();
