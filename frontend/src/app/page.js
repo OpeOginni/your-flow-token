@@ -1,6 +1,6 @@
 "use client";
 
-import { SimpleGrid, Button, useToast } from "@chakra-ui/react";
+import { SimpleGrid, Button, Badge, Center, Text } from "@chakra-ui/react";
 import Link from "next/link.js";
 import WelcomeHeader from "../components/welcomeHeader";
 
@@ -16,6 +16,20 @@ export default function Home() {
           </span>{" "}
           Token
         </h1>
+        <Badge
+          borderRadius="full"
+          px="2"
+          variant="outline"
+          colorScheme="green"
+          className="text-md font-bold text-center text-lightGreen"
+        >
+          <Center p={2}>
+            <Text>Note Wallets for Mainnet and Testnet are Different</Text>
+          </Center>
+          <Center p={2}>
+            <Text>even if both are registrered using the same E-mail</Text>
+          </Center>
+        </Badge>
         <SimpleGrid columns={2} spacingX="80px" p="120px">
           <div className=" flex flex-col justify-center items-center text-gWhite">
             <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">

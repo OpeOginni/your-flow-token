@@ -109,6 +109,7 @@ export default function NetworkTypeHomePage() {
             width="150px"
             size="lg"
             className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+            onClick={fcl.unauthenticate} // Users Have to be logged out when going to the home page, as mainnet and testnet wallets are different for the same email
           >
             Back to Home
           </Button>
