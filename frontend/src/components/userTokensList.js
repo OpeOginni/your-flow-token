@@ -24,14 +24,32 @@ const UserTokensList = ({ user }) => {
   // Use the Flow Config settings of the specific network the user is on
   flowConfig(networkType);
 
+  const flowScanExplorer = (_networkType, _contractId) => {
+    if (_networkType === "MAINNET") {
+      return `https://flowscan.org/contract/${_contractId}`;
+    } else if (_networkType === "TESTNET") {
+      return `https://testnet.flowscan.org/contract/${_contractId}`;
+    }
+  };
+
+  const flowViewLink = (_networkType, _userAddress) => {
+    if (_networkType === "MAINNET") {
+      return `https://www.flowview.app/account/${_userAddress}/fungible_token`;
+    } else if (_networkType === "TESTNET") {
+      return `https://testnet.flowview.app/account/${_userAddress}/fungible_token`;
+    }
+  };
+
   const toast = useToast();
   const [combinedData, setCombinedData] = useState(null);
   const [_combinedData, _setCombinedData] = useState(null);
+  const [userFlowViewLink, setUserFlowViewLink] = useState("");
 
   useEffect(() => {
     const fetchAccountContracts = async () => {
       const wallet = await user;
       try {
+        setUserFlowViewLink(flowViewLink(networkType, wallet.addr));
         console.log(wallet);
         const accountContractsArray1 = await fcl.query({
           cadence: scriptTemplates.getAccountContracts(),
@@ -75,6 +93,15 @@ const UserTokensList = ({ user }) => {
   return (
     <Box background="black" className="flex flex-col  text-gWhite">
       <h1 className="text-3xl font-bold pb-4 text-center">Your Tokens</h1>
+      <h1 className="text-xl  pb-4 text-center">
+        Check Out all Your Tokens with Supply and Interact with them on{" "}
+        <Badge borderRadius="full" px="2" colorScheme="green">
+          <Link href={userFlowViewLink} target="_blank" className="font-bold">
+            FlowView
+          </Link>
+        </Badge>
+      </h1>
+
       <div className="flex flex-col">
         {combinedData == null ? (
           <Grid padding="5" templateColumns="repeat(8, 1fr)" gap={6}>
@@ -124,7 +151,7 @@ const UserTokensList = ({ user }) => {
 
               <GridItem colSpan={2}>
                 <Link
-                  href={`https://testnet.flowscan.org/contract/${contract.id}`}
+                  href={flowScanExplorer(networkType, contract.id)}
                   target="_blank"
                 >
                   <Text as="u">Check Token on FlowScan</Text>{" "}
@@ -133,7 +160,7 @@ const UserTokensList = ({ user }) => {
 
               <GridItem colSpan={2}>
                 <Link
-                  href={`https://testnet.flowscan.org/contract/${contract.id}`}
+                  href={flowScanExplorer(networkType, contract.id)}
                   target="_blank"
                 >
                   <Text borderRadius="full" px="2" colorScheme="teal">
