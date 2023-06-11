@@ -1,18 +1,19 @@
-const transferTokenTransaction = (
+export const transferTokenTransaction = (
   TokenDetails,
+  tokenContractAddress,
   FungibleTokenStandardAddress
 ) => {
   `
-import ${TokenDetails.name} from ${TokenDetails.contractAddress}
+import ${tokenName} from ${tokenContractAddress}
 import FungibleToken from ${FungibleTokenStandardAddress}
 
 transaction(receiverAccount: Address, amount: UFix64) {
     prepare(acct: AuthAccount) {
-        let signerVault = acct.borrow<&${TokenDetails.name}.Vault>(from: /storage/Vault)
+        let signerVault = acct.borrow<&${tokenName}.Vault>(from: /storage/Vault)
                                     ?? panic("Couldn't get the Signer's Vault")
 
         let receiverVault = getAccount(receiverAccount).getCapability(/public/Vault)
-                                    .borrow<&${TokenDetails.name}.Vault{FungibleToken.Receiver}>()
+                                    .borrow<&${tokenName}.Vault{FungibleToken.Receiver}>()
                                     ?? panic("Couldn't get the Receiver's Vault")
 
         receiverVault.deposit(from: <- signerVault.withdraw(amount: amount))
@@ -24,16 +25,20 @@ transaction(receiverAccount: Address, amount: UFix64) {
     `;
 };
 
-const createVault = (TokenDetails, FungibleTokenStandardAddress) => {
-  `
-    import ${TokenDetails.name} from ${TokenDetails.contractAddress}
+export const createVault = (
+  tokenName,
+  tokenContractAddress,
+  FungibleTokenStandardAddress
+) => {
+  return `
+    import ${tokenName} from ${tokenContractAddress}
     import FungibleToken from ${FungibleTokenStandardAddress}
 
 transaction {
 
     prepare(acct: AuthAccount) {
-        acct.save(<- ${TokenDetails.name}.createEmptyVault(), to: /storage/Vault)
-        acct.link<&${TokenDetails.name}.Vault{FungibleToken.Balance, FungibleToken.Receiver}>(/public/Vault, target: /storage/Vault)
+        acct.save(<- ${tokenName}.createEmptyVault(), to: /storage/${tokenName}Vault)
+        acct.link<&${tokenName}.Vault{FungibleToken.Balance, FungibleToken.Receiver}>(/public/${tokenName}Vault, target: /storage/${tokenName}Vault)
     }
 
     execute{
@@ -43,20 +48,24 @@ transaction {
     `;
 };
 
-const mintToken = (TokenDetails, FungibleTokenStandardAddress) => {
-  `
-    import ${TokenDetails.name} from ${TokenDetails.contractAddress}
+export const mintToken = (
+  tokenName,
+  tokenContractAddress,
+  FungibleTokenStandardAddress
+) => {
+  return `
+    import ${tokenName} from ${tokenContractAddress}
     import FungibleToken from ${FungibleTokenStandardAddress}
 
     transaction(receiverAccount: Address, mintAmount: UFix64) {
 
         prepare(acct: AuthAccount) {
-            let minter = acct.borrow<&${TokenDetails.name}.Minter>(from: /storage/Minter)
+            let minter = acct.borrow<&${tokenName}.Minter>(from: /storage/${tokenName}Minter)
                                      ?? panic("We could not borrow the Minter resource")
-            let newVault <- minter.mintToken(amount: mintAmount)
+            let newVault <- minter.mintTokens(amount: mintAmount)
             
-            let receiverVault = getAccount(receiverAccount).getCapability(/public/Vault)
-                                              .borrow<&${TokenDetails.name}.Vault{FungibleToken.Receiver}>()
+            let receiverVault = getAccount(receiverAccount).getCapability(/public/${tokenName}Vault)
+                                              .borrow<&${tokenName}.Vault{FungibleToken.Receiver}>()
                                               ?? panic("Couldn't get the public Vault")
                                               
             receiverVault.deposit(from: <- newVault)
@@ -67,4 +76,21 @@ const mintToken = (TokenDetails, FungibleTokenStandardAddress) => {
         }
     }
     `;
+};
+
+export const hasTokenVault = (
+  tokenName,
+  tokenContractAddress,
+  FungibleTokenStandardAddress
+) => {
+  return `
+        import ${tokenName} from ${tokenContractAddress}
+        import FungibleToken from ${FungibleTokenStandardAddress}
+
+        pub fun main(user: Address): Bool {
+           let vaultCapability = getAccount(user).getCapability(/public/${tokenName}Vault)
+           let vault = vaultCapability.borrow<&${tokenName}.Vault{FungibleToken.Balance}>()
+           return vault != nil
+        }
+        `;
 };
