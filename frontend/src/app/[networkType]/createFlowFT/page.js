@@ -44,6 +44,19 @@ export default function FTPage() {
           </Badge>
           <Box p="120px">
             <div className=" flex flex-col justify-center items-center text-gWhite">
+              <Link
+                href={`/${networkType.toLocaleLowerCase()}/createFlowFT/createTokenVault`}
+              >
+                <Button
+                  height="48px"
+                  width="170px"
+                  size="lg"
+                  className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+                >
+                  Create Token Vault
+                </Button>
+              </Link>
+              <Box p={6}></Box>
               <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
                 Create Fungible Token
               </h1>

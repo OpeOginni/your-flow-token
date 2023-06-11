@@ -58,7 +58,7 @@ import FungibleToken from "./FungibleToken.cdc"
     }
 
     pub resource Minter {
-        pub fun mintToken(amount: UFix64): @FungibleToken.Vault {
+        pub fun mintTokens(amount: UFix64): @FungibleToken.Vault {
             MyFlowToken.totalSupply = MyFlowToken.totalSupply + amount
             return <- create Vault(balance:amount)
         }

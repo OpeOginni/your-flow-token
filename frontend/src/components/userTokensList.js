@@ -8,11 +8,22 @@ import {
   GridItem,
   Center,
   Spinner,
+  Input,
+  Button,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 
 import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 import * as scriptTemplates from "../../../backend/FungibleTokens/templates/scriptTemplates";
+import { ftMintTransactionFactory } from "../../../backend/FungibleTokens/transactionFactory/mintTransactionFactory";
+import { ftHasTokenVault } from "../../../backend/FungibleTokens/transactionFactory/createTokenVaultFactory";
 import Link from "next/link";
+import { useTx } from "../hooks/use-tx.hook";
 import { usePathname } from "next/navigation";
 import { flowConfig } from "../utils/flowConfig.util.js";
 
@@ -44,6 +55,111 @@ const UserTokensList = ({ user }) => {
   const [combinedData, setCombinedData] = useState(null);
   const [_combinedData, _setCombinedData] = useState(null);
   const [userFlowViewLink, setUserFlowViewLink] = useState("");
+  const [mintData, setMintData] = useState({});
+  const [transactionPending, setTransactionPending] = useState(false);
+
+  const createToast = (title, description, status, duration) => {
+    return toast({
+      title: title,
+      description: description,
+      status: status,
+      position: "bottom-right",
+      duration: duration,
+      isClosable: true,
+    });
+  };
+
+  const mintToken = async (tokenName) => {
+    const wallet = await user;
+    const { receiverAddress, amount } = mintData[tokenName];
+
+    try {
+      const checkTokenVault = ftHasTokenVault(
+        tokenName,
+        wallet.addr,
+        networkType
+      );
+
+      const hasTokenVault = await fcl.query({
+        cadence: checkTokenVault,
+        args: (arg, t) => [arg(receiverAddress, t.Address)],
+      });
+
+      if (!hasTokenVault) {
+        setTransactionPending(false);
+        return createToast(
+          "Error",
+          "Address doesn't have a Vault for this Token",
+          "error",
+          5000
+        );
+      }
+    } catch {
+      console.log(e);
+      setTransactionPending(false);
+
+      return createToast("Error", "Please Try Again", "error", 3000);
+    }
+
+    const transactionCode = ftMintTransactionFactory(
+      tokenName,
+      wallet.addr,
+      networkType
+    );
+
+    console.log(transactionCode);
+
+    const [exec, status, txStatus, details] = useTx([
+      fcl.transaction`${transactionCode}`,
+      fcl.payer(fcl.authz),
+      fcl.proposer(fcl.authz),
+      fcl.authorizations([fcl.authz]),
+      fcl.limit(1000),
+    ]);
+
+    try {
+      setTransactionPending(true);
+      console.log(receiverAddress, amount);
+
+      const txId = await exec([
+        fcl.arg(receiverAddress, t.Address),
+        fcl.arg(amount, t.UFix64),
+      ]);
+
+      fcl.tx(txId).subscribe(async (res) => {
+        console.log(res);
+        if (res.errorMessage) {
+          setTransactionPending(false);
+          return createToast(
+            "Error in Minting Token",
+            "Check the Reciever Address",
+            "error",
+            9000
+          );
+        }
+        if (res.status === 4) {
+          console.log("EXECUTED");
+          setTransactionPending(false);
+          createToast(
+            "TX Status",
+            "Token Was Minted Successfuly",
+            "success",
+            9000
+          );
+
+          // SHows Transaction Page in 4 seconds
+          setTimeout(function () {
+            window.open(flowScanExplorer(networkType, txId), "_blank");
+          }, 4000);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      setTransactionPending(false);
+
+      return createToast("Error", "Please Try Again", "error", 3000);
+    }
+  };
 
   useEffect(() => {
     const fetchAccountContracts = async () => {
@@ -74,6 +190,12 @@ const UserTokensList = ({ user }) => {
         setCombinedData(newData);
 
         console.log(newData);
+        newData.map((contract) => {
+          setMintData((prevData) => ({
+            ...prevData,
+            [contract.name]: { receiverAddress: "", amount: 1 },
+          }));
+        });
       } catch (err) {
         console.log(err);
         return toast({
@@ -158,15 +280,56 @@ const UserTokensList = ({ user }) => {
                 </Link>
               </GridItem>
 
-              <GridItem colSpan={2}>
-                <Link
-                  href={flowScanExplorer(networkType, contract.id)}
-                  target="_blank"
+              <GridItem colSpan={2} className="flex flex-row">
+                <Input
+                  focusBorderColor="lime"
+                  placeholder="Wallet Address"
+                  value={mintData[contract.name].receiverAddress}
+                  onChange={(event) =>
+                    setMintData((prevData) => ({
+                      ...prevData,
+                      [contract.name]: {
+                        ...prevData[contract.name],
+                        receiverAddress: event.target.value,
+                      },
+                    }))
+                  }
+                />
+                <NumberInput
+                  precision={2}
+                  focusBorderColor="lime"
+                  defaultValue={1}
+                  min={1}
+                  onChange={(event) =>
+                    setMintData((prevData) => ({
+                      ...prevData,
+                      [contract.name]: {
+                        ...prevData[contract.name],
+                        amount: event,
+                      },
+                    }))
+                  }
                 >
-                  <Text borderRadius="full" px="2" colorScheme="teal">
-                    Interact on Flex-My-Flow-Token
-                  </Text>{" "}
-                </Link>
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>{" "}
+                <Box p={1}></Box>
+                <Button
+                  height="40px"
+                  width="110px"
+                  size="lg"
+                  isLoading={transactionPending}
+                  loadingText={"..."}
+                  className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+                  onClick={() => {
+                    mintToken(contract.name);
+                  }}
+                >
+                  MINT
+                </Button>
               </GridItem>
             </Grid>
           ))
