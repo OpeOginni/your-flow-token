@@ -25,7 +25,7 @@ To run this project locally, follow these steps:
 
 ## How To Create a Fungible Token on the Flow Blockchain
 
-1. Open your web browser and navigate to the URL where the project is running.
+1. Open your web browser and navigate to the URL where the project is [running](https://your-flow-token.vercel.app/).
 2. Choose which network you would like to deploy your token on. (Either Mainnet or Testnet).
 3. Connect your wallet by clicking the Login button and following the authentication process.
 4. Choose whoch type of Token you would like to create. (NFT creation is not available yet)
@@ -33,6 +33,14 @@ To run this project locally, follow these steps:
 6. Click the "Create Token" button to initiate the token creation process.
 7. Wait for the transaction to be confirmed on the Flow Blockchain.
 8. Once the token is successfully created, you will receive a confirmation message.
+
+## How To Mint the token for other Users
+
+1. Let the user who you want to Mint a token for create aa Vault for that token.
+2. They would need to put in the Token Name and The token creator's address(Your Address).
+3. After the token vault has been created, you can mint them that token by providing their Wallet Address and the Amount you want to Mint for the user, then click on the MINT button.
+4. Sign the transaction and BOOM, you have Minted your own token for another user.
+
 
 ## Technologies Used
 
