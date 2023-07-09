@@ -1,5 +1,5 @@
 /* 
-Here I The Contract Factory function that takes the needed detials put by users and create unique Cadence Token Contracts for them
+Here is The Contract Factory function that takes the needed detials put by users and create unique Cadence Token Contracts for them
 
 Using this Function I can create Fungible Tokens Contracts on the flow testnet and mainnet
 */
