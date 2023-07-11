@@ -9,18 +9,18 @@ import {
   Center,
   Spinner,
   Button,
+  ButtonGroup,
 } from "@chakra-ui/react";
 
 import * as fcl from "@onflow/fcl";
 import * as t from "@onflow/types";
 import * as scriptTemplates from "../../../backend/FungibleTokens/templates/scriptTemplates";
-import { ftMintTransactionFactory } from "../../../backend/FungibleTokens/transactionFactory/mintTransactionFactory";
-import { ftHasTokenVault } from "../../../backend/FungibleTokens/transactionFactory/createTokenVaultFactory";
 import Link from "next/link";
 import { useTx } from "../hooks/use-tx.hook";
 import { usePathname } from "next/navigation";
 import { flowConfig } from "../utils/flowConfig.util.js";
 import { NFTIsCollection } from "../../../backend/NonFungibleTokens/transactionFactory/createNFTFactory";
+import MintNFTPopup from "./MintNFTPopup";
 
 const UserNFTCollectionList = ({ user }) => {
   // Get the PathName to know which Network the User is On
@@ -52,6 +52,15 @@ const UserNFTCollectionList = ({ user }) => {
   const [userFlowViewLink, setUserFlowViewLink] = useState("");
   const [mintData, setMintData] = useState({});
   const [transactionPending, setTransactionPending] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
 
   const createToast = (title, description, status, duration) => {
     return toast({
@@ -64,12 +73,12 @@ const UserNFTCollectionList = ({ user }) => {
     });
   };
 
-  const mintNFT = async (collectionName) => {
+  const mintNFT = async (collection) => {
     const wallet = await user;
 
     try {
       const checkIfCollection = NFTIsCollection(
-        collectionName,
+        collection.name,
         wallet.addr,
         networkType
       );
@@ -84,6 +93,10 @@ const UserNFTCollectionList = ({ user }) => {
       if (!isCollection) {
         setTransactionPending(false);
         return createToast("Error", "No NFT Collection Exists", "error", 5000);
+      } else {
+        createToast("Success", "Collection Exists", "success", 2000);
+
+        handleOpenPopup();
       }
     } catch (e) {
       setTransactionPending(false);
@@ -143,101 +156,119 @@ const UserNFTCollectionList = ({ user }) => {
   }, [user, toast]);
 
   return (
-    <Box background="black" className="flex flex-col  text-gWhite">
-      <h1 className="text-3xl font-bold pb-4 text-center">
-        Your Deployed Contracts
-      </h1>
-      <h1 className="text-xl  pb-4 text-center">
-        Mint from NFT Collections ONLY
-        <Badge borderRadius="full" px="2" colorScheme="green">
-          <Link href={userFlowViewLink} target="_blank" className="font-bold">
-            FlowView
-          </Link>
-        </Badge>
-      </h1>
+    <>
+      <Box background="black" className="flex flex-col  text-gWhite">
+        <h1 className="text-3xl font-bold pb-4 text-center">
+          Your Deployed Contracts
+        </h1>
+        <h1 className="text-xl  pb-4 text-center">
+          Mint from NFT Collections ONLY
+          <Badge borderRadius="full" px="2" colorScheme="green">
+            <Link href={userFlowViewLink} target="_blank" className="font-bold">
+              FlowView
+            </Link>
+          </Badge>
+        </h1>
 
-      <div className="flex flex-col">
-        {combinedData == null ? (
-          <Grid padding="5" templateColumns="repeat(8, 1fr)" gap={6}>
-            <GridItem colSpan={2}>
-              <Center>
-                <Spinner />
-              </Center>{" "}
-            </GridItem>
-
-            <GridItem colSpan={2}>
-              <Center>
-                <Spinner />
-              </Center>
-            </GridItem>
-
-            <GridItem colSpan={2}>
-              <Center>
-                <Spinner />
-              </Center>
-            </GridItem>
-
-            <GridItem colSpan={2}>
-              <Center>
-                <Spinner />
-              </Center>
-            </GridItem>
-          </Grid>
-        ) : combinedData.length > 0 ? (
-          combinedData.map((contract) => (
-            <Grid
-              padding="5"
-              key={contract._id}
-              templateColumns="repeat(8, 1fr)"
-              gap={6}
-            >
+        <div className="flex flex-col">
+          {combinedData == null ? (
+            <Grid padding="5" templateColumns="repeat(8, 1fr)" gap={6}>
               <GridItem colSpan={2}>
-                <Text className="text-lg" as="b" colSpan={2}>
-                  {contract.name}
-                </Text>
+                <Center>
+                  <Spinner />
+                </Center>{" "}
               </GridItem>
 
               <GridItem colSpan={2}>
-                <Badge borderRadius="full" px="2" colorScheme="teal">
-                  {contract.type}
-                </Badge>{" "}
+                <Center>
+                  <Spinner />
+                </Center>
               </GridItem>
 
               <GridItem colSpan={2}>
-                <Link
-                  href={flowScanExplorer(networkType, contract.id)}
-                  target="_blank"
-                >
-                  <Text as="u">Check Token on FlowScan</Text>{" "}
-                </Link>
+                <Center>
+                  <Spinner />
+                </Center>
               </GridItem>
 
-              <GridItem colSpan={2} className="flex flex-row">
-                <Button
-                  height="40px"
-                  width="110px"
-                  size="lg"
-                  isLoading={transactionPending}
-                  loadingText={"..."}
-                  className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
-                  onClick={() => {
-                    mintNFT(contract.name);
-                  }}
-                >
-                  MINT
-                </Button>
+              <GridItem colSpan={2}>
+                <Center>
+                  <Spinner />
+                </Center>
               </GridItem>
             </Grid>
-          ))
-        ) : (
-          <Center>
-            <Text className="text-bold text-lightGreen">
-              You Have No Contracts
-            </Text>
-          </Center>
-        )}
-      </div>
-    </Box>
+          ) : combinedData.length > 0 ? (
+            combinedData.map((contract) => (
+              <Grid
+                padding="5"
+                key={contract._id}
+                templateColumns="repeat(8, 1fr)"
+                gap={6}
+              >
+                <GridItem colSpan={2}>
+                  <Text className="text-lg" as="b" colSpan={2}>
+                    {contract.name}
+                  </Text>
+                </GridItem>
+
+                <GridItem colSpan={2}>
+                  <Badge borderRadius="full" px="2" colorScheme="teal">
+                    {contract.type}
+                  </Badge>{" "}
+                </GridItem>
+
+                <GridItem colSpan={2}>
+                  <Link
+                    href={flowScanExplorer(networkType, contract.id)}
+                    target="_blank"
+                  >
+                    <Text as="u">Check Token on FlowScan</Text>{" "}
+                  </Link>
+                </GridItem>
+
+                <GridItem colSpan={2}>
+                  <ButtonGroup gap={2}>
+                    <Button
+                      height="40px"
+                      width="110px"
+                      size="lg"
+                      isLoading={transactionPending}
+                      loadingText={"..."}
+                      className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+                      onClick={() => {
+                        mintNFT(contract);
+                      }}
+                    >
+                      Check
+                    </Button>
+                    <Button
+                      height="40px"
+                      width="110px"
+                      size="lg"
+                      isLoading={transactionPending}
+                      loadingText={"..."}
+                      className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+                      onClick={() => {
+                        mintNFT(contract);
+                      }}
+                    >
+                      Mint
+                    </Button>
+                  </ButtonGroup>
+                </GridItem>
+              </Grid>
+            ))
+          ) : (
+            <Center>
+              <Text className="text-bold text-lightGreen">
+                You Have No Contracts
+              </Text>
+            </Center>
+          )}
+        </div>
+      </Box>
+      <MintNFTPopup isOpen={isPopupOpen} onClose={handleClosePopup} />
+    </>
   );
 };
 

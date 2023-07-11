@@ -6,11 +6,11 @@ Using this Function I can create custom NonFungible Tokens Contracts on the flow
 
 import * as templates from "../templates/contractTemplates";
 
-const NonFungibleTokenMainnet = "0xf233dcee88fe0abe"; // Deployed Funglible Token Standard on Mainnet
-const NonFungibleTokenTestnet = "0x9a0766d93b6608b7"; // Deployed Funglible Token Standard on Testnet
+const NonFungibleTokenMainnet = "0x1d7e57aa55817448"; // Deployed Funglible Token Standard on Mainnet
+const NonFungibleTokenTestnet = "0x631e88ae7f1d7c20"; // Deployed Funglible Token Standard on Testnet
 
-const MetadataViewsMainnet = "0xf233dcee88fe0abe"; // Deployed Metadata Views Standard on Mainnet
-const MetadataViewsTestnet = "0x9a0766d93b6608b7"; // Deployed Metadata Views Standard on Testnet
+const MetadataViewsMainnet = "0x1d7e57aa55817448"; // Deployed Metadata Views Standard on Mainnet
+const MetadataViewsTestnet = "0x631e88ae7f1d7c20"; // Deployed Metadata Views Standard on Testnet
 
 export const nftContractFactory = (
   collectionContractName,
