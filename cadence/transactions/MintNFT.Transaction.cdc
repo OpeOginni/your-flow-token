@@ -7,7 +7,7 @@ transaction(
     name: String,
     description: String,
     thumbnail: String,
-     metadata: {String: AnyStruct} 
+    metadata: {String: AnyStruct} 
     ) {
 
     /// local variable for storing the minter reference
@@ -33,12 +33,6 @@ prepare(signer: AuthAccount) {
             .getCapability(TNT.CollectionPublicPath)
             .borrow<&{NonFungibleToken.CollectionPublic}>()
             ?? panic("Could not get receiver reference to the NFT Collection")
-
-
-        // THIS IS HOW THE METADATA WILL LOOK LIKE
-        //    self.metadata = {"Hair": "Blue", "Fingers": "Five"}
-
-
 }
 
 
@@ -50,7 +44,12 @@ execute {
             name: name,
             description: description,
             thumbnail: thumbnail,
-            // metadata: self.metadata You will pass it in like this
+            metadata: metadata
         )
 }
+
+    post {
+        self.recipientCollectionRef.getIDs().contains(self.mintingIDBefore): "The next NFT ID should have been minted and delivered"
+        NFT.totalSupply == self.mintingIDBefore + 1: "The total supply should have been increased by 1"
+    }
 }

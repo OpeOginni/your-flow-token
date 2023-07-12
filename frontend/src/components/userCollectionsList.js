@@ -40,9 +40,9 @@ const UserNFTCollectionList = ({ user }) => {
 
   const flowViewLink = (_networkType, _userAddress) => {
     if (_networkType === "MAINNET") {
-      return `https://www.flowview.app/account/${_userAddress}/fungible_token`;
+      return `https://www.flowview.app/account/${_userAddress}/collection`;
     } else if (_networkType === "TESTNET") {
-      return `https://testnet.flowview.app/account/${_userAddress}/fungible_token`;
+      return `https://testnet.flowview.app/account/${_userAddress}/collection`;
     }
   };
 
@@ -53,6 +53,8 @@ const UserNFTCollectionList = ({ user }) => {
   const [mintData, setMintData] = useState({});
   const [transactionPending, setTransactionPending] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [collection, setCollection] = useState("");
+  const [minterWallet, setMinterWallet] = useState("");
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -73,12 +75,12 @@ const UserNFTCollectionList = ({ user }) => {
     });
   };
 
-  const mintNFT = async (collection) => {
+  const mintNFT = async (_collection) => {
     const wallet = await user;
 
     try {
       const checkIfCollection = NFTIsCollection(
-        collection.name,
+        _collection.name,
         wallet.addr,
         networkType
       );
@@ -94,6 +96,8 @@ const UserNFTCollectionList = ({ user }) => {
         setTransactionPending(false);
         return createToast("Error", "No NFT Collection Exists", "error", 5000);
       } else {
+        setCollection(_collection);
+        setMinterWallet(wallet.addr);
         createToast("Success", "Collection Exists", "success", 2000);
 
         handleOpenPopup();
@@ -222,7 +226,7 @@ const UserNFTCollectionList = ({ user }) => {
                     href={flowScanExplorer(networkType, contract.id)}
                     target="_blank"
                   >
-                    <Text as="u">Check Token on FlowScan</Text>{" "}
+                    <Text as="u">Check Contract on FlowScan</Text>{" "}
                   </Link>
                 </GridItem>
 
@@ -267,7 +271,13 @@ const UserNFTCollectionList = ({ user }) => {
           )}
         </div>
       </Box>
-      <MintNFTPopup isOpen={isPopupOpen} onClose={handleClosePopup} />
+      <MintNFTPopup
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        collection={collection}
+        minterWallet={minterWallet}
+        networkType={networkType}
+      />
     </>
   );
 };
