@@ -6,25 +6,22 @@ import * as t from "@onflow/types";
 import {
   Button,
   ButtonGroup,
-  Box,
   Text,
-  Input,
-  Checkbox,
   FormControl,
   FormLabel,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  Center,
+  Input,
+  Box,
+  IconButton,
   useToast,
 } from "@chakra-ui/react";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+
 import { useTx } from "../../../../hooks/use-tx.hook";
 import Link from "next/link";
-import { ftContractTemplateFactory } from "../../../../../../backend/FungibleTokens/contractFactory/fungibleTokenContractFactory";
 import { usePathname } from "next/navigation";
 import { flowConfig } from "../../../../utils/flowConfig.util";
+import { nftContractFactory } from "../../../../../../backend/NonFungibleTokens/contractFactory/nonFungibleTokenContractFactory";
+import { uploadToIPFS } from "../../../../utils/IPFSUpload";
 
 export default function CreateFtForm({ onClose }) {
   const toast = useToast();
@@ -48,12 +45,34 @@ export default function CreateFtForm({ onClose }) {
       fcl.currentUser().subscribe(resolve, reject);
     });
   };
+  const [metadata, setMetadata] = useState([{ media: "", url: "" }]);
 
   const [user, setUser] = useState({ loggedIn: null });
-  const [IsInitialMintChecked, setIsInitialMintChecked] = useState(true);
-  const [tokenName, setTokenName] = useState("");
+  const [collectionName, setCollectionName] = useState("");
+  const [collectionDescription, setCollectionDescription] = useState("");
+  const [collectionExternalURL, setCollectionExternalURL] = useState("");
+  const [collectionImage, setCollectionImage] = useState("");
+  const [collectionImageIPFS, setCollectionImageIPFS] = useState("");
+  const [collectionSocials, setCollectionSocials] = useState("");
+
   const [initialMint, setInitialMint] = useState(0);
   const [transactionPending, setTransactionPending] = useState(false);
+
+  const handleAddMetadata = () => {
+    setMetadata([...metadata, { media: "", url: "" }]);
+  };
+
+  const handleRemoveMetadata = (index) => {
+    const updatedMetadata = [...metadata];
+    updatedMetadata.splice(index, 1);
+    setMetadata(updatedMetadata);
+  };
+
+  const handleMetadataChange = (index, field, value) => {
+    const updatedMetadata = [...metadata];
+    updatedMetadata[index][field] = value;
+    setMetadata(updatedMetadata);
+  };
 
   const createToast = (title, description, status, duration) => {
     return toast({
@@ -80,12 +99,12 @@ export default function CreateFtForm({ onClose }) {
     fcl.limit(1000),
   ]);
 
-  const createToken = async () => {
-    if (/\s/.test(tokenName)) {
-      console.log(tokenName);
+  const createNFTCollection = async () => {
+    if (/\s/.test(collectionName) || collectionName.length < 1) {
+      console.log(collectionName);
       return toast({
         title: "Error",
-        description: "Token name should not contain spaces",
+        description: "Collection name should not contain spaces or be empty",
         status: "error",
         position: "bottom-right",
         duration: 4000,
@@ -93,20 +112,41 @@ export default function CreateFtForm({ onClose }) {
       });
     }
 
-    const tokenContract = ftContractTemplateFactory(
-      tokenName,
-      initialMint,
-      networkType
+    console.log("SOCIALSSS", metadata);
+
+    const ipfsLink = await uploadToIPFS(
+      collectionImage,
+      collectionName,
+      collectionDescription
     );
 
-    console.log(tokenContract);
+    const imageLink = ipfsLink.data.image.href;
+    const collectionMetadataDetails = {
+      collectionNameMetadata: collectionName,
+      collectionDescriptionMetadata: collectionDescription,
+      collectionExternalUrlMetadata: collectionExternalURL,
+      collectionImageIPFSUrlMetadata: imageLink,
+      collectionSocialsMetadata: metadata,
+    };
+
+    const collectionContract = nftContractFactory(
+      collectionName,
+      true,
+      networkType,
+      collectionMetadataDetails
+    );
+
+    console.log(collectionContract);
 
     try {
       setTransactionPending(true);
 
       const txId = await exec([
-        fcl.arg(tokenName, t.String),
-        fcl.arg(Buffer.from(tokenContract, "utf-8").toString("hex"), t.String),
+        fcl.arg(collectionName, t.String),
+        fcl.arg(
+          Buffer.from(collectionContract, "utf-8").toString("hex"),
+          t.String
+        ),
       ]);
 
       fcl.tx(txId).subscribe(async (res) => {
@@ -115,7 +155,7 @@ export default function CreateFtForm({ onClose }) {
           setTransactionPending(false);
           return createToast(
             "TX Status",
-            "Error in Creating Token",
+            "Error in Creating Collection",
             "error",
             9000
           );
@@ -125,7 +165,7 @@ export default function CreateFtForm({ onClose }) {
           setTransactionPending(false);
           createToast(
             "TX Status",
-            "Token Was Created Successfuly",
+            "NFT Collection Was Created Successfuly",
             "success",
             9000
           );
@@ -159,57 +199,75 @@ export default function CreateFtForm({ onClose }) {
         <div className="popupContainer">
           <div className="popupForm">
             <Text className="text-lg font-bold text-center" paddingY="10">
-              Create Your Own Fungible Token on the Flow Blockchain
+              Create Your Own NFT Collection on the Flow Blockchain
             </Text>
             <Box paddingY="10px">
               <Input
                 focusBorderColor="lime"
-                placeholder="Token Name"
-                value={tokenName}
-                onChange={(e) => setTokenName(e.target.value)}
+                placeholder="Collection Name"
+                value={collectionName}
+                onChange={(e) => setCollectionName(e.target.value)}
               />
-            </Box>
-            <Box paddingY="10px">
-              <Checkbox
-                defaultChecked
-                size="lg"
-                colorScheme="green"
-                spacing="1rem"
-                onChange={(e) => setIsInitialMintChecked(e.target.checked)}
-              >
-                Initial Mint
-              </Checkbox>
               <FormControl>
-                <FormLabel>Amount Minted To You</FormLabel>
-                {!IsInitialMintChecked ? (
-                  <NumberInput
-                    precision={2}
-                    focusBorderColor="lime"
-                    value={0}
-                    isDisabled
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                ) : (
-                  <NumberInput
-                    precision={2}
-                    focusBorderColor="lime"
-                    defaultValue={1}
-                    min={1}
-                    onChange={(event) => setInitialMint(event)}
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                )}
+                <FormLabel>Collection Description</FormLabel>
+                <Input
+                  placeholder="Anything You decide...."
+                  value={collectionDescription}
+                  onChange={(e) => setCollectionDescription(e.target.value)}
+                />
               </FormControl>
+              <FormControl>
+                <FormLabel>External URL</FormLabel>
+                <Input
+                  placeholder="www.your-collection.com"
+                  value={collectionExternalURL}
+                  onChange={(e) => setCollectionExternalURL(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Collection Image</FormLabel>
+                <Input
+                  type="file"
+                  value={collectionImage}
+                  onChange={(e) => setCollectionImage(e.target.value)}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Socials</FormLabel>
+
+                {metadata.map((item, index) => (
+                  <Box key={index} display="flex" marginBottom="1rem">
+                    <Input
+                      placeholder="Twitter"
+                      value={item.key}
+                      onChange={(e) =>
+                        handleMetadataChange(index, "media", e.target.value)
+                      }
+                      marginRight="1rem"
+                    />
+                    <Input
+                      placeholder="URL"
+                      value={item.value}
+                      onChange={(e) =>
+                        handleMetadataChange(index, "url", e.target.value)
+                      }
+                    />
+
+                    <IconButton
+                      icon={<MinusIcon />}
+                      aria-label="Remove Metadata"
+                      onClick={() => handleRemoveMetadata(index)}
+                      marginLeft="1rem"
+                    />
+                  </Box>
+                ))}
+              </FormControl>
+
+              <IconButton
+                icon={<AddIcon />}
+                aria-label="Add Metadata"
+                onClick={handleAddMetadata}
+              />
             </Box>
             <div>
               <ButtonGroup spacing="80" paddingTop="15px">
@@ -232,9 +290,9 @@ export default function CreateFtForm({ onClose }) {
                   isLoading={transactionPending}
                   loadingText={"PENDING"}
                   className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
-                  onClick={createToken}
+                  onClick={createNFTCollection}
                 >
-                  Create Token
+                  Create Collection
                 </Button>
               </ButtonGroup>
             </div>

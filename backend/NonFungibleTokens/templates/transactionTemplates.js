@@ -6,7 +6,6 @@ export const isNFTCollection = (
   return `
           import ${collectionName} from ${collectionContractAddress}
           import NonFungibleToken from ${NonFungibleTokenStandardAddress}
-
           pub fun main(user: Address): Bool {
           let collection = getAccount(user)
           .getCapability(${collectionName}.CollectionPublicPath)
@@ -72,7 +71,6 @@ export const mintNFT = (
                 metadata: metadata
             )
     }
-
     post {
       self.recipientCollectionRef.getIDs().contains(self.mintingIDBefore): "The next NFT ID should have been minted and delivered"
       ${collectionName}.totalSupply == self.mintingIDBefore + 1: "The total supply should have been increased by 1"

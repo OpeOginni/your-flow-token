@@ -1,6 +1,5 @@
 /* 
 Here is The Contract Factory function 
-
 Using this Function I can create custom NonFungible Tokens Contracts on the flow testnet and mainnet
 */
 
@@ -16,7 +15,6 @@ export const nftContractFactory = (
   collectionContractName,
   collectionMetadata,
   networkType,
-  NFTmetadata,
   collectionMetadataDetails = {
     collectionNameMetadata: "",
     collectionDescriptionMetadata: "",
@@ -45,15 +43,13 @@ export const nftContractFactory = (
       collectionContractName,
       nonFungibleTokenStandardAddress,
       metadataViewStandardAddress,
-      NFTmetadata,
       collectionMetadataDetails
     );
   } else {
     contractTemplate = templates.customNFTCollectionContractWithoutMetadata(
       collectionContractName,
       nonFungibleTokenStandardAddress,
-      metadataViewStandardAddress,
-      NFTmetadata
+      metadataViewStandardAddress
     );
   }
   return contractTemplate;

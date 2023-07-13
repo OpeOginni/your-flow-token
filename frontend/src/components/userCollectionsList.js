@@ -232,19 +232,18 @@ const UserNFTCollectionList = ({ user }) => {
 
                 <GridItem colSpan={2}>
                   <ButtonGroup gap={2}>
-                    <Button
-                      height="40px"
-                      width="110px"
-                      size="lg"
-                      isLoading={transactionPending}
-                      loadingText={"..."}
-                      className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
-                      onClick={() => {
-                        mintNFT(contract);
-                      }}
-                    >
-                      Check
-                    </Button>
+                    <Link href={userFlowViewLink} target="_blank">
+                      <Button
+                        height="40px"
+                        width="110px"
+                        size="lg"
+                        isLoading={transactionPending}
+                        loadingText={"..."}
+                        className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+                      >
+                        Check
+                      </Button>
+                    </Link>
                     <Button
                       height="40px"
                       width="110px"

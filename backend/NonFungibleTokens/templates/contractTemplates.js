@@ -2,7 +2,7 @@ export const customNFTCollectionContractWithMetadata = (
   collectionContractName,
   nonFungibleTokenStandardAddress,
   metadataViewStandardAddress,
-  collectionMetadata = {
+  collectionMetadataDetails = {
     collectionNameMetadata: "",
     collectionDescriptionMetadata: "",
     collectionExternalUrlMetadata: "",
@@ -11,13 +11,23 @@ export const customNFTCollectionContractWithMetadata = (
   }
 ) => {
   let collectionSocials = "";
+  console.log(collectionMetadataDetails);
+  console.log(
+    "Contract Template Function:",
+    collectionMetadataDetails.collectionSocialsMetadata
+  );
+  collectionMetadataDetails.collectionSocialsMetadata.forEach(
+    (collectionSocial) => {
+      collectionSocials += `\n "${collectionSocial.media}":  MetadataViews.ExternalURL("${collectionSocial.url}"),`;
+    }
+  );
 
-  collectionMetadata.collectionSocials.forEach((collectionSocial) => {
-    collectionSocials += `\n {"${collectionSocial.media}:  MetadataViews.ExternalURL("${collectionSocial.url}"),`;
-  });
+  console.log("BEFORE SLICED", collectionSocials);
+
+  collectionSocials = collectionSocials.slice(0, -1);
+  console.log("SLICED", collectionSocials);
 
   return `
-
     import NonFungibleToken from ${nonFungibleTokenStandardAddress};
     import MetadataViews from ${metadataViewStandardAddress};
     
@@ -148,14 +158,12 @@ export const customNFTCollectionContractWithMetadata = (
             thumbnail: String,
             metadata: {String: AnyStruct},
           ) {
-
             // create a new NFT
             var newNFT <- create NFT(
                 id: ${collectionContractName}.totalSupply,
                 name: name,
                 description: description,
                 thumbnail: thumbnail,
-                royalties: royalties,
                 metadata: metadata,
             )
     
@@ -184,14 +192,14 @@ export const customNFTCollectionContractWithMetadata = (
                     case Type<MetadataViews.NFTCollectionDisplay>():
                         let media = MetadataViews.Media(
                             file: MetadataViews.HTTPFile(
-                                url: ${collectionMetadata.imageIPFSUrl} 
+                                url: "${collectionMetadataDetails.collectionImageIPFSUrlMetadata}"
                             ),
                             mediaType: "image/svg+xml" 
                         )
                     return MetadataViews.NFTCollectionDisplay(
-                        name: ${collectionMetadata.collectionName},
-                        description: ${collectionMetadata.collectionDescription}, 
-                        externalURL: MetadataViews.ExternalURL(${collectionMetadata.collectionExternalUrl}), 
+                        name: "${collectionMetadataDetails.collectionNameMetadata}",
+                        description: "${collectionMetadataDetails.collectionDescriptionMetadata}", 
+                        externalURL: MetadataViews.ExternalURL("${collectionMetadataDetails.collectionExternalUrlMetadata}"), 
                         squareImage: media, 
                         bannerImage: media, 
                         socials: {${collectionSocials}
@@ -361,7 +369,6 @@ export const customNFTCollectionContractWithoutMetadata = (
       return <- create Collection()
     }
     pub resource NFTMinter {
-
     pub fun mintNFT(
       recipient: &{NonFungibleToken.CollectionPublic},
       name: String,
@@ -381,7 +388,6 @@ export const customNFTCollectionContractWithoutMetadata = (
   
       ${collectionContractName}.totalSupply = ${collectionContractName}.totalSupply + 1
     }
-
     pub fun resolveView(_ view: Type): AnyStruct? {
       switch view {
           case Type<MetadataViews.NFTCollectionData>():
@@ -400,7 +406,6 @@ export const customNFTCollectionContractWithoutMetadata = (
       return nil
   }
 }
-
   /// Function that returns all the Metadata Views implemented by a Non Fungible Token
   ///
   /// @return An array of Types defining the implemented views. This value will be used by
@@ -411,7 +416,6 @@ export const customNFTCollectionContractWithoutMetadata = (
           Type<MetadataViews.NFTCollectionData>()
       ]
   }
-
   
     init() {
       self.totalSupply = 0
@@ -427,7 +431,6 @@ export const customNFTCollectionContractWithoutMetadata = (
         self.CollectionPublicPath,
         target: self.CollectionStoragePath
       )
-
       let minter <- create NFTMinter()
       self.account.save(<-minter, to: self.MinterStoragePath)
   
