@@ -81,15 +81,17 @@ export default function NetworkTypeHomePage() {
             <h1 className="text-3xl font-bold pb-4 text-center text-lightGreen">
               Create Non-Fungible Token (NFT)
             </h1>
-            <Button
-              height="48px"
-              width="150px"
-              size="lg"
-              className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
-              onClick={comingSoonToast}
-            >
-              Coming Soon!
-            </Button>
+            <Link href={`/${networkType.toLocaleLowerCase()}/createFlowNFT`}>
+              <Button
+                height="48px"
+                width="150px"
+                size="lg"
+                className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
+                // onClick={comingSoonToast}
+              >
+                NFTs
+              </Button>
+            </Link>
           </div>
         </SimpleGrid>
       ) : (
