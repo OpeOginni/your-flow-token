@@ -89,7 +89,7 @@ export default function NetworkTypeHomePage() {
                 className="rounded-xl text-gWhite bg-lightGreen font-bold hover:bg-lightGreen/60"
                 // onClick={comingSoonToast}
               >
-                Coming Soon!
+                NFTs
               </Button>
             </Link>
           </div>
