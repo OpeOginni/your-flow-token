@@ -8,7 +8,7 @@ export default function WelcomeHeader() {
       <Box display="flex" alignItems="baseline" p="9" gap="20">
         <Center>
           <Text className="text-gWhite font-bold">
-            Built on the Flow Blockchain for the 2023 Chainlink Hackathon
+            Built on the Flow Blockchain for the Flow Hackathon Season 2
           </Text>
         </Center>
       </Box>
