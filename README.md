@@ -21,7 +21,8 @@ To run this project locally, follow these steps:
 1. Clone the repository to your local machine.
 2. Navigate to the `frontend` directory on the terminal with `cd frontend`.
 3. Install the dependencies by running the command `npm install`.
-4. Start the development server with `npm run dev`.
+4. Create a `.env` file and using the variables in the `.envexample` file, put in your api key from [NFT.Storage](https://nft.storage/)
+5. Start the development server with `npm run dev`.
 
 ## How To Create a Fungible Token on the Flow Blockchain
 
