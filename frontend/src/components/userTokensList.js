@@ -107,8 +107,6 @@ const UserTokensList = ({ user }) => {
       networkType
     );
 
-    console.log(transactionCode);
-
     const [exec, status, txStatus, details] = useTx([
       fcl.transaction`${transactionCode}`,
       fcl.payer(fcl.authz),
@@ -119,7 +117,6 @@ const UserTokensList = ({ user }) => {
 
     try {
       setTransactionPending(true);
-      console.log(receiverAddress, amount);
 
       const txId = await exec([
         fcl.arg(receiverAddress, t.Address),
@@ -166,7 +163,6 @@ const UserTokensList = ({ user }) => {
       const wallet = await user;
       try {
         setUserFlowViewLink(flowViewLink(networkType, wallet.addr));
-        console.log(wallet);
         const accountContractsArray1 = await fcl.query({
           cadence: scriptTemplates.getAccountContracts(),
           args: (arg, t) => [arg(wallet.addr, t.Address)],
@@ -189,7 +185,6 @@ const UserTokensList = ({ user }) => {
           .filter(Boolean);
         setCombinedData(newData);
 
-        console.log(newData);
         newData.map((contract) => {
           setMintData((prevData) => ({
             ...prevData,
@@ -208,7 +203,6 @@ const UserTokensList = ({ user }) => {
         });
       }
     };
-    console.log("FETING");
     fetchAccountContracts();
   }, [user, toast]);
 

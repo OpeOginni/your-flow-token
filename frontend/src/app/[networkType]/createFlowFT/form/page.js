@@ -17,7 +17,6 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-  Center,
   useToast,
 } from "@chakra-ui/react";
 import { useTx } from "../../../../hooks/use-tx.hook";
@@ -98,8 +97,6 @@ export default function CreateFtForm({ onClose }) {
       initialMint,
       networkType
     );
-
-    console.log(tokenContract);
 
     try {
       setTransactionPending(true);

@@ -9,15 +9,6 @@ import {
   Box,
   Text,
   Input,
-  Checkbox,
-  FormControl,
-  FormLabel,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  Center,
   useToast,
 } from "@chakra-ui/react";
 import { useTx } from "../../../../hooks/use-tx.hook";
@@ -123,8 +114,6 @@ export default function CreateFtForm({ onClose }) {
       fcl.authorizations([fcl.authz]),
       fcl.limit(1000),
     ]);
-
-    console.log(createVaultTranaction);
 
     try {
       setTransactionPending(true);

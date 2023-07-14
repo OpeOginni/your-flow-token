@@ -118,8 +118,6 @@ export default function CreateFtForm({ onClose }) {
       });
     }
 
-    console.log("SOCIALSSS", metadata);
-
     try {
       setTransactionPending(true);
 
@@ -145,7 +143,6 @@ export default function CreateFtForm({ onClose }) {
         collectionMetadataDetails
       );
 
-      console.log(collectionContract);
       const txId = await exec([
         fcl.arg(collectionName, t.String),
         fcl.arg(
