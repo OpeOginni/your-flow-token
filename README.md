@@ -1,4 +1,4 @@
-# Chainlink 2023 Hackathon Project
+# Flow To The Future Hackathon
 
 ## Introduction to `Your Flow Token`
 
@@ -41,6 +41,9 @@ To run this project locally, follow these steps:
 3. After the token vault has been created, you can mint them that token by providing their Wallet Address and the Amount you want to Mint for the user, then click on the MINT button.
 4. Sign the transaction and BOOM, you have Minted your own token for another user.
 
+## Update for Flow Hackathon Season 2
+
+Users can now create Collections and MINT NFTs🥳
 
 ## Technologies Used
 
