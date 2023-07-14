@@ -38,7 +38,7 @@ function MintNFTPopup({
   const [NFTName, setNFTName] = useState("");
   const [NFTDescription, setNFTDescription] = useState("");
   const [deployedIPFSLink, setDeployedIPFSLink] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState({});
   const [NFTReciever, setNFTReciever] = useState("");
   const [transactionPending, setTransactionPending] = useState(false);
 
@@ -79,14 +79,15 @@ function MintNFTPopup({
     });
   };
 
+  const readFiles = (event) => {
+    const files = event.target.files;
+    if (files.length > 0) {
+      setImage(files[0]);
+    }
+  };
+
   const mintNFT = async () => {
     try {
-      const ipfsLink = await uploadToIPFS(image, NFTName, NFTDescription);
-      console.log("Name: ", NFTName);
-      console.log("Description: ", NFTDescription);
-      console.log("Metadata: ", metadata);
-      console.log("ipfsLink: ", ipfsLink);
-
       const checkIfCollection = NFTIsCollection(
         collection.name,
         minterWallet,
@@ -109,6 +110,12 @@ function MintNFTPopup({
           5000
         );
       }
+      setTransactionPending(true);
+
+      console.log("IMAGE", image);
+      const ipfsLink = await uploadToIPFS(image, NFTName, NFTDescription);
+
+      console.log("ipfsLink: ", ipfsLink);
 
       const mintNFTTransactionCode = nftMintTransactionFactory(
         collection.name,
@@ -126,7 +133,6 @@ function MintNFTPopup({
         fcl.limit(1000),
       ]);
 
-      setTransactionPending(true);
       console.log("IPFS", ipfsLink.data.image.href);
 
       const txId = await exec([
@@ -206,11 +212,7 @@ function MintNFTPopup({
           </FormControl>
           <FormControl mt={4}>
             <FormLabel>Image</FormLabel>
-            <Input
-              type="file"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-            />
+            <Input type="file" onChange={readFiles} />
           </FormControl>
           <FormControl mt={4}>
             <FormLabel>Metadata</FormLabel>

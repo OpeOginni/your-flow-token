@@ -74,6 +74,12 @@ export default function CreateFtForm({ onClose }) {
     setMetadata(updatedMetadata);
   };
 
+  const readFiles = (event) => {
+    const files = event.target.files;
+    if (files.length > 0) {
+      setCollectionImage(files[0]);
+    }
+  };
   const createToast = (title, description, status, duration) => {
     return toast({
       title: title,
@@ -114,33 +120,32 @@ export default function CreateFtForm({ onClose }) {
 
     console.log("SOCIALSSS", metadata);
 
-    const ipfsLink = await uploadToIPFS(
-      collectionImage,
-      collectionName,
-      collectionDescription
-    );
-
-    const imageLink = ipfsLink.data.image.href;
-    const collectionMetadataDetails = {
-      collectionNameMetadata: collectionName,
-      collectionDescriptionMetadata: collectionDescription,
-      collectionExternalUrlMetadata: collectionExternalURL,
-      collectionImageIPFSUrlMetadata: imageLink,
-      collectionSocialsMetadata: metadata,
-    };
-
-    const collectionContract = nftContractFactory(
-      collectionName,
-      true,
-      networkType,
-      collectionMetadataDetails
-    );
-
-    console.log(collectionContract);
-
     try {
       setTransactionPending(true);
 
+      const ipfsLink = await uploadToIPFS(
+        collectionImage,
+        collectionName,
+        collectionDescription
+      );
+
+      const imageLink = ipfsLink.data.image.href;
+      const collectionMetadataDetails = {
+        collectionNameMetadata: collectionName,
+        collectionDescriptionMetadata: collectionDescription,
+        collectionExternalUrlMetadata: collectionExternalURL,
+        collectionImageIPFSUrlMetadata: imageLink,
+        collectionSocialsMetadata: metadata,
+      };
+
+      const collectionContract = nftContractFactory(
+        collectionName,
+        true,
+        networkType,
+        collectionMetadataDetails
+      );
+
+      console.log(collectionContract);
       const txId = await exec([
         fcl.arg(collectionName, t.String),
         fcl.arg(
@@ -226,11 +231,7 @@ export default function CreateFtForm({ onClose }) {
               </FormControl>
               <FormControl>
                 <FormLabel>Collection Image</FormLabel>
-                <Input
-                  type="file"
-                  value={collectionImage}
-                  onChange={(e) => setCollectionImage(e.target.value)}
-                />
+                <Input type="file" onChange={readFiles} />
               </FormControl>
               <FormControl mt={4}>
                 <FormLabel>Socials</FormLabel>
