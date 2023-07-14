@@ -4,7 +4,7 @@
 
 <img src="./images/yourflow-logo2.svg" alt="YourFlowToken" width="50px" style="margin-right: 30px;">
 
-This hackathon project is a NextJS website that allows users to create tokens on the Flow Blockchain with just a few clicks. The project utilizes NextJS, ChakraUI, the @onflow/fcl package, JavaScript, and the Cadence. By connecting their wallet and providing the necessary details, users can easily generate tokens on the Flow Blockchain.
+This hackathon project is a NextJS website that allows users to create tokens on the Flow Blockchain with just a few clicks. The project utilizes NextJS, ChakraUI, the @onflow/fcl package, JavaScript, NFT.Storage and the Cadence Language. By connecting their wallet and providing the necessary details, users can easily generate tokens on the Flow Blockchain.
 
 ## Flow Blockchain: A Seamless Wallet Experience
 
@@ -69,7 +69,7 @@ This project leverages the following technologies and languages:
 
 ## Future Considerations / WIP
 
-At the moment users can only create Fungible Tokens, I would like to add the functionality to allow users create Non-Fungible Tokens too.
+Create Packages for Creators who would like to make Large NFT Collections on Flow.
 
 ## Contributing
 
